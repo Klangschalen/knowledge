@@ -1,0 +1,64 @@
+name: anthropic-intelligence — weekly scan
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      priority:
+        description: 'Min priority to scan (P0/P1/P2)'
+        required: false
+        default: 'P2'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: anthropic-weekly-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: anthropic-intelligence/scripts/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r anthropic-intelligence/scripts/requirements.txt
+
+      - name: Run scanner
+        env:
+          PRIORITY: ${{ github.event.inputs.priority || 'P2' }}
+        run: |
+          cd anthropic-intelligence
+          WEEK=$(date -u +%Y-%V)
+          python scripts/fetch_sources.py \
+            --sources sources.yaml \
+            --state monitoring/state.json \
+            --output monitoring/logs/${WEEK}.md \
+            --min-priority "$PRIORITY"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: anthropic-intel/weekly-scan-${{ github.run_id }}
+          base: main
+          commit-message: 'chore(anthropic-intel): weekly scan'
+          title: '[anthropic-intel] Weekly scan: new signals'
+          body: |
+            Automated weekly scan of Anthropic + Claude Code sources.
+
+            Review the new log under `anthropic-intelligence/monitoring/logs/`
+            and skim for anything worth promoting into a topic article.
+          labels: anthropic-intel,automation
+          add-paths: |
+            anthropic-intelligence/monitoring/logs/**
+            anthropic-intelligence/monitoring/state.json
