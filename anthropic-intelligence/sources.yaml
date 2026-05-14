@@ -1,0 +1,159 @@
+# Source registry for the Anthropic Intelligence monitoring pipeline.
+#
+# Each source has:
+#   id:          stable slug used as filename / key
+#   name:        human-readable name
+#   url:         canonical URL
+#   feed:        RSS/Atom URL if available; null otherwise (then we scrape)
+#   priority:    P0 | P1 | P2 (see CADENCE.md)
+#   kind:        blog | docs | release | x | reddit | github
+#   topics:      list of topic slugs this source informs
+#   verified:    true if URL has been hand-verified by a human
+#
+# When adding a new source, set verified: false and let the next reviewer flip it.
+#
+# Last probe run: 2026-W20 — see monitoring/logs/2026-W20.md
+
+sources:
+  # ---- P0: official Anthropic surfaces ---------------------------------
+  - id: anthropic-news
+    name: Anthropic News
+    url: https://www.anthropic.com/news
+    feed: null  # /news/rss.xml returned 404 in 2026-W20 probe — scrape-only
+    priority: P0
+    kind: blog
+    topics: [all]
+    verified: false
+    notes: "No public RSS as of 2026-05-12; treat as scrape-only or build a custom HTML differ."
+
+  - id: anthropic-research
+    name: Anthropic Research
+    url: https://www.anthropic.com/research
+    feed: null
+    priority: P0
+    kind: blog
+    topics: [research, models]
+    verified: false
+
+  - id: anthropic-engineering
+    name: Anthropic Engineering Blog
+    url: https://www.anthropic.com/engineering
+    feed: null
+    priority: P0
+    kind: blog
+    topics: [claude-code, tool-use, agents, prompting]
+    verified: false
+
+  - id: claude-code-releases
+    name: Claude Code GitHub Releases
+    url: https://github.com/anthropics/claude-code/releases
+    feed: https://github.com/anthropics/claude-code/releases.atom
+    priority: P0
+    kind: release
+    topics: [claude-code]
+    verified: true  # verified 2026-W20 probe — returned 5 entries v2.1.133–2.1.139
+
+  - id: anthropic-docs
+    name: Anthropic Docs
+    url: https://docs.anthropic.com/
+    feed: null
+    priority: P0
+    kind: docs
+    topics: [api, claude-code, tool-use, caching]
+    verified: false
+
+  # ---- P1: Anthropic employees ----------------------------------------
+  - id: erik-schluntz-blog
+    name: Erik Schluntz personal blog
+    url: https://www.erikschluntz.com/
+    feed: null
+    priority: P1
+    kind: blog
+    topics: [claude-code, agents]
+    verified: false
+
+  - id: thariq-shihipar-x
+    name: Thariq Shihipar on X (author of "Unreasonable Effectiveness of HTML")
+    url: https://x.com/trq212
+    feed: null
+    priority: P1
+    kind: x
+    topics: [output-formats, claude-code]
+    verified: false
+
+  - id: boris-cherny-x
+    name: Boris Cherny on X
+    url: https://x.com/bcherny
+    feed: null
+    priority: P1
+    kind: x
+    topics: [claude-code, typescript, tooling]
+    verified: false
+
+  - id: sholto-douglas-x
+    name: Sholto Douglas on X
+    url: https://x.com/_sholtodouglas
+    feed: null
+    priority: P1
+    kind: x
+    topics: [scaling, models, research]
+    verified: false
+
+  - id: cat-wu-x
+    name: Cat Wu on X (Claude Code PM)
+    url: https://x.com/_catwu
+    feed: null
+    priority: P1
+    kind: x
+    topics: [claude-code, product]
+    verified: false
+
+  # ---- P1: external high-signal observers ------------------------------
+  - id: simon-willison
+    name: Simon Willison's Weblog
+    url: https://simonwillison.net/
+    feed: https://simonwillison.net/atom/everything/
+    priority: P1
+    kind: blog
+    topics: [claude-code, tool-use, prompting, all]
+    verified: true  # verified 2026-W20 probe — 5 entries fetched cleanly
+
+  # ---- P2: community signal ------------------------------------------
+  - id: reddit-claudeai
+    name: r/ClaudeAI
+    url: https://www.reddit.com/r/ClaudeAI/
+    feed: null  # /.rss returned 403 in 2026-W20 probe — needs UA header rotation
+    priority: P2
+    kind: reddit
+    topics: [community, claude-code]
+    verified: false
+    notes: "Reddit RSS blocks default urllib UA. Scanner needs to send a real browser UA."
+
+  - id: reddit-aiagents
+    name: r/AI_Agents
+    url: https://www.reddit.com/r/AI_Agents/
+    feed: null  # /.rss returned 403 in 2026-W20 probe — needs UA header rotation
+    priority: P2
+    kind: reddit
+    topics: [community, agents]
+    verified: false
+    notes: "Reddit RSS blocks default urllib UA. Scanner needs to send a real browser UA."
+
+# Topic taxonomy. Topics referenced in sources[].topics must appear here.
+topics:
+  - all
+  - output-formats
+  - claude-code
+  - tool-use
+  - caching
+  - agents
+  - hooks
+  - prompting
+  - models
+  - api
+  - research
+  - scaling
+  - product
+  - typescript
+  - tooling
+  - community

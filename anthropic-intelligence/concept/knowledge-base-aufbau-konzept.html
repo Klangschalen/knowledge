@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Base Aufbau - Session-Review und Konzept-Entscheidungen</title>
+<style>
+  :root {
+    --bg: #EFE7DA;
+    --card: #FBF8F2;
+    --card-2: #F3ECDE;
+    --ink: #3A3228;
+    --ink-soft: #6B5E4C;
+    --accent: #8B6F4E;
+    --accent-dark: #5C4A33;
+    --border: #D8CCB5;
+    --code-bg: #2E2820;
+    --code-ink: #EDE4D2;
+    --ok: #6B8E5A;
+    --warn: #C28A3D;
+    --danger: #B5604E;
+    --info: #5E7C8B;
+    --shadow: 0 2px 10px rgba(58,50,40,0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.62;
+    font-size: 16px;
+  }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 32px 20px 90px; }
+  header h1 { font-size: 1.65rem; margin: 0 0 6px; color: var(--accent-dark); }
+  header p.sub { margin: 0 0 4px; color: var(--ink-soft); }
+  header p.meta { margin: 0 0 26px; color: var(--ink-soft); font-size: 0.85rem; }
+  h2 {
+    font-size: 1.18rem; color: var(--accent-dark);
+    margin: 40px 0 12px; border-bottom: 2px solid var(--border); padding-bottom: 6px;
+  }
+  h3 { font-size: 1.02rem; margin: 22px 0 8px; color: var(--accent-dark); }
+  p { margin: 10px 0; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 22px; box-shadow: var(--shadow); margin: 16px 0;
+  }
+  .tldr { border-left: 5px solid var(--accent); background: var(--card-2); }
+  .tldr strong { color: var(--accent-dark); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 680px) { .grid2 { grid-template-columns: 1fr; } }
+
+  /* Badges */
+  .badge {
+    display: inline-block; font-size: 0.74rem; font-weight: 700;
+    padding: 2px 9px; border-radius: 999px; color: #fff; vertical-align: middle;
+    letter-spacing: 0.02em;
+  }
+  .badge.entschieden { background: var(--ok); }
+  .badge.offen { background: var(--warn); }
+  .badge.verworfen { background: var(--danger); }
+  .badge.geerbt { background: var(--info); }
+  .badge.gewaehlt { background: var(--ok); }
+
+  /* Timeline */
+  .timeline { margin: 8px 0; }
+  .tl-item { display: flex; gap: 14px; padding: 8px 0; }
+  .tl-num {
+    flex: 0 0 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-weight: 700; font-size: 0.82rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tl-body { flex: 1; }
+  .tl-body b { color: var(--accent-dark); }
+  .tl-body .tag { font-size: 0.78rem; color: var(--ink-soft); }
+  .tl-line { width: 2px; background: var(--border); margin-left: 13px; height: 10px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--card-2); color: var(--accent-dark); font-size: 0.82rem; }
+  tr:last-child td { border-bottom: none; }
+  td.pro { color: #4d6b3f; }
+  td.con { color: #9a4f40; }
+
+  /* Score bars */
+  .score-row { display: flex; align-items: center; gap: 10px; margin: 5px 0; font-size: 0.86rem; }
+  .score-label { flex: 0 0 110px; color: var(--ink-soft); }
+  .score-track { flex: 1; background: var(--card-2); border-radius: 6px; height: 16px; overflow: hidden; border: 1px solid var(--border); }
+  .score-fill { height: 100%; background: var(--accent); border-radius: 6px 0 0 6px; }
+  .score-num { flex: 0 0 38px; text-align: right; font-weight: 600; color: var(--accent-dark); }
+  .score-total { font-weight: 700; color: var(--accent-dark); }
+
+  /* Wege */
+  .weg {
+    border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+    background: var(--card-2); margin: 10px 0;
+  }
+  .weg h4 { margin: 0 0 4px; color: var(--accent-dark); }
+  .weg .verdict { font-size: 0.85rem; font-weight: 600; margin-top: 6px; }
+
+  details {
+    border: 1px solid var(--border); border-radius: 10px; background: var(--card-2);
+    margin: 10px 0; padding: 0 14px;
+  }
+  details summary {
+    cursor: pointer; padding: 12px 0; font-weight: 600; color: var(--accent-dark);
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "+ "; color: var(--accent); font-weight: 700; }
+  details[open] summary::before { content: "- "; }
+  details .det-body { padding: 0 0 14px; font-size: 0.92rem; }
+  details .det-body .why { color: var(--ink-soft); font-size: 0.86rem; margin-top: 6px; }
+
+  pre {
+    background: var(--code-bg); color: var(--code-ink); padding: 14px 16px;
+    border-radius: 10px; overflow-x: auto; font-size: 0.84rem; line-height: 1.5;
+    font-family: "SF Mono", Consolas, Menlo, monospace;
+  }
+  code.inline {
+    background: var(--card-2); border: 1px solid var(--border); padding: 1px 6px;
+    border-radius: 5px; font-size: 0.88em; font-family: "SF Mono", Consolas, Menlo, monospace;
+  }
+  .copy-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  button.copy-btn {
+    background: var(--accent); color: #fff; border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 0.85rem; cursor: pointer; font-family: inherit; font-weight: 600;
+  }
+  button.copy-btn:active { background: var(--accent-dark); }
+  .legend { font-size: 0.82rem; color: var(--ink-soft); margin: 6px 0; }
+  footer { margin-top: 44px; color: var(--ink-soft); font-size: 0.82rem; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Knowledge Base Aufbau - Session-Review und Konzept-Entscheidungen</h1>
+    <p class="sub">Drei Schritte zurück: Was haben wir entschieden, welche Konzepte standen zur Wahl, welche Wege sind offen.</p>
+    <p class="meta">Stand 2026-05-14 - Bezug: Repo klangschalen/knowledge, Subtree anthropic-intelligence/ - Session-Review</p>
+  </header>
+
+  <div class="card tldr">
+    <strong>Kurzfassung:</strong> Diese Session hat eine bereits angelegte Knowledge-Base-Struktur
+    (Subtree <code class="inline">anthropic-intelligence/</code> im Repo <code class="inline">knowledge</code>)
+    als <strong>PR #1</strong> sichtbar gemacht, mit einer echten Quellen-Probe getestet, die dabei
+    gefundenen Fehler in <code class="inline">sources.yaml</code> zurückgespielt, und einen
+    Dauer-Skill <code class="inline">/new-repo-bootstrap</code> gebaut, der die wiederkehrende
+    Allowlist-Falle umgeht. Zentrale Entscheidung: <strong>Subtree statt eigenem Repo</strong> -
+    bewusst als Kompromiss, mit klarem späteren Ausstiegspfad.
+  </div>
+
+  <h2>1. Was in dieser Session passiert ist</h2>
+  <div class="card">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-num">1</div>
+        <div class="tl-body">
+          <b>PR #1 geöffnet</b> - klangschalen/knowledge, Branch claude/anthropic-knowledge-base-EXRN2 -> main.
+          <div class="tag">Macht die geerbte KB-Struktur reviewbar. Inhalt des Branches: KB-Gerüst, 2 Workflows, erstes Dossier.</div>
+        </div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">2</div>
+        <div class="tl-body">
+          <b>Probe-Scan gefahren</b> - lokal, stdlib statt feedparser (Sandbox konnte sgmllib3k nicht bauen).
+          <div class="tag">Befund: Claude-Code-Releases-Feed + Simon-Willison-Feed funktionieren. Anthropic-News-RSS 404, Reddit-RSS 403.</div>
+        </div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">3</div>
+        <div class="tl-body">
+          <b>sources.yaml korrigiert</b> - Probe-Befunde zurückgespielt, Log-Datei committed.
+          <div class="tag">verified-Flag eingeführt, kaputte Feeds auf feed:null (scrape-only) gesetzt.</div>
+        </div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">4</div>
+        <div class="tl-body">
+          <b>/new-repo-bootstrap Skill gebaut</b> - in klangschalen/claude-config committed.
+          <div class="tag">Dauerhafte Antwort auf die Allowlist-Falle: Claude kann weder Repos anlegen noch die MCP-Allowlist zur Laufzeit ändern.</div>
+        </div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">5</div>
+        <div class="tl-body">
+          <b>claude-config komplett geladen</b> - 30 Hooks, 32 Commands, 14 Skills, 9 Rules, 6 Agents, 8 Pläne, Learnings.
+          <div class="tag">Kontext-Aufbau. Nebenbefund: Web-Sessions laden weder Hooks noch Slash-Commands aus dem Repo.</div>
+        </div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-item">
+        <div class="tl-num">6</div>
+        <div class="tl-body">
+          <b>Zwei HTML-Artefakte gebaut</b> - slash-command-diagnose.html (committed nach claude-config/docs/) und dieses Dokument.
+          <div class="tag">Etabliert: HTML-Artefakte für Entscheidungs- und Diagnosehilfen, Markdown für Wissens-Atome.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>2. Worum es geht: vier Konzept-Achsen</h2>
+  <div class="card">
+    <p>Eine Knowledge Base aufzubauen ist nicht eine Entscheidung, sondern vier unabhängige:</p>
+    <table>
+      <thead><tr><th>Achse</th><th>Frage</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><b>A. Repo-Struktur</b></td><td>Wo lebt die KB physisch?</td><td><span class="badge entschieden">entschieden</span> mit Ausstiegspfad</td></tr>
+        <tr><td><b>B. Automatisierungs-Modell</b></td><td>Wie bleibt sie aktuell?</td><td><span class="badge geerbt">geerbt</span> vom Branch, bestätigt</td></tr>
+        <tr><td><b>C. Quellen-Strategie</b></td><td>Woher kommt das Rohmaterial?</td><td><span class="badge entschieden">entschieden</span> in dieser Session verfeinert</td></tr>
+        <tr><td><b>D. Output-Form</b></td><td>In welcher Form wird Wissen abgelegt?</td><td><span class="badge entschieden">entschieden</span> implizit etabliert</td></tr>
+      </tbody>
+    </table>
+    <p class="legend">Legende: <span class="badge geerbt">geerbt</span> = lag schon auf dem Branch &nbsp; <span class="badge entschieden">entschieden</span> = in dieser Session festgelegt/verfeinert &nbsp; <span class="badge offen">offen</span> = noch zu klären &nbsp; <span class="badge verworfen">verworfen</span> = bewusst nicht gewählt</p>
+  </div>
+
+  <h2>3. Achse A - Repo-Struktur</h2>
+  <div class="card">
+    <p>Die zentrale und am meisten diskutierte Entscheidung. Drei Konzepte standen zur Wahl:</p>
+    <table>
+      <thead>
+        <tr><th>Konzept</th><th>Vorteile</th><th>Nachteile</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>1. Eigenes Repo</b><br><code class="inline">klangschalen/anthropic-intelligence</code></td>
+          <td class="pro">Sauberste Trennung. Eigene CI, eigene Issues, eigene Releases. Langfristig korrekt.</td>
+          <td class="con">Allowlist-Falle: Claude kann das Repo nicht anlegen (403) und die MCP-Allowlist nicht zur Laufzeit erweitern. Blockiert sofortiges Arbeiten.</td>
+          <td><span class="badge verworfen">verworfen</span> (vorerst)</td>
+        </tr>
+        <tr>
+          <td><b>2. Subtree in knowledge</b><br><code class="inline">knowledge/anthropic-intelligence/</code></td>
+          <td class="pro">Sofort bearbeitbar (knowledge ist auf der Allowlist). Später per <code class="inline">git subtree split</code> in eigenes Repo extrahierbar. Kein Sessionneustart nötig.</td>
+          <td class="con">knowledge-Repo wird thematisch gemischt. knowledge ist öffentlich - Sichtbarkeit prüfen. Kein eigenes Issue-Tracking.</td>
+          <td><span class="badge gewaehlt">gewählt</span></td>
+        </tr>
+        <tr>
+          <td><b>3. Teil von claude-config</b><br><code class="inline">claude-config/anthropic-intelligence/</code></td>
+          <td class="pro">Nähe zum Mutter-Repo. Wird mit jeder Session-Config mitgeliefert.</td>
+          <td class="con">Vermischt Konfiguration mit Wissensinhalt. claude-config ist bereits groß. Falsche Verantwortungs-Ebene.</td>
+          <td><span class="badge verworfen">verworfen</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Bewertung der drei Konzepte</h3>
+    <div class="grid2">
+      <div>
+        <p><b>Konzept 1 - Eigenes Repo</b></p>
+        <div class="score-row"><span class="score-label">Einfachheit</span><span class="score-track"><span class="score-fill" style="width:40%"></span></span><span class="score-num">4/10</span></div>
+        <div class="score-row"><span class="score-label">Korrektheit</span><span class="score-track"><span class="score-fill" style="width:90%"></span></span><span class="score-num">9/10</span></div>
+        <div class="score-row"><span class="score-label">Langfristig</span><span class="score-track"><span class="score-fill" style="width:90%"></span></span><span class="score-num">9/10</span></div>
+        <p class="legend">Gesamt <span class="score-total">7.3</span> - aber durch Allowlist-Falle aktuell nicht startbar.</p>
+      </div>
+      <div>
+        <p><b>Konzept 2 - Subtree in knowledge</b></p>
+        <div class="score-row"><span class="score-label">Einfachheit</span><span class="score-track"><span class="score-fill" style="width:90%"></span></span><span class="score-num">9/10</span></div>
+        <div class="score-row"><span class="score-label">Korrektheit</span><span class="score-track"><span class="score-fill" style="width:70%"></span></span><span class="score-num">7/10</span></div>
+        <div class="score-row"><span class="score-label">Langfristig</span><span class="score-track"><span class="score-fill" style="width:60%"></span></span><span class="score-num">6/10</span></div>
+        <p class="legend">Gesamt <span class="score-total">7.3</span> - sofort startbar, Ausstiegspfad vorhanden.</p>
+      </div>
+    </div>
+    <p><b>Entscheidung:</b> Konzept 2. Bei Gleichstand im Gesamtscore gibt die <b>sofortige Handlungsfähigkeit</b>
+    den Ausschlag - "mehr Features auf instabilem Fundament ist Schaden", aber hier ist das Fundament
+    handlungsfähig statt blockiert. Der Ausstiegspfad (subtree split) hält Konzept 1 als Zukunft offen.</p>
+  </div>
+
+  <h2>4. Achse B - Automatisierungs-Modell</h2>
+  <div class="card">
+    <p>Wie bleibt die KB aktuell, ohne dass jemand manuell hinterherräumt? Vier Modelle:</p>
+    <table>
+      <thead><tr><th>Modell</th><th>Vorteile</th><th>Nachteile</th><th>Bewertung</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Manuell pflegen</b></td>
+          <td class="pro">Null Infrastruktur. Volle Kontrolle.</td>
+          <td class="con">Wird vergessen. Skaliert nicht. Drift garantiert.</td>
+          <td>Einf. 8 / Korr. 5 / Langfr. 3</td>
+        </tr>
+        <tr>
+          <td><b>Nur RSS-Scan</b><br>(GitHub Action, kein Secret)</td>
+          <td class="pro">Läuft ohne API-Key. Günstig. Deterministisch.</td>
+          <td class="con">Sammelt nur, synthetisiert nicht. Rohmaterial ohne Einordnung.</td>
+          <td>Einf. 7 / Korr. 6 / Langfr. 6</td>
+        </tr>
+        <tr>
+          <td><b>Nur LLM-Synthese</b><br>(braucht ANTHROPIC_API_KEY)</td>
+          <td class="pro">Erzeugt eingeordnetes Wissen, nicht nur Links.</td>
+          <td class="con">Ohne Rohmaterial-Sammler keine Trigger. Kostet Tokens. Halluzinations-Risiko.</td>
+          <td>Einf. 4 / Korr. 7 / Langfr. 6</td>
+        </tr>
+        <tr>
+          <td><b>Hybrid</b><br>wöchentlicher Scan + monatliche Synthese</td>
+          <td class="pro">Scan liefert Signal ohne Secret, Synthese verdichtet es mit Key. Klare Cadence.</td>
+          <td class="con">Zwei Workflows zu pflegen. Synthese-Qualität noch ungetestet.</td>
+          <td><b>Einf. 5 / Korr. 8 / Langfr. 8</b></td>
+        </tr>
+      </tbody>
+    </table>
+    <p><b>Status: <span class="badge geerbt">geerbt</span></b> - das Hybrid-Modell lag bereits auf dem Branch
+    (<code class="inline">anthropic-weekly-scan.yml</code> + <code class="inline">anthropic-monthly-synthesis.yml</code>).
+    Diese Session hat es im PR-Body dokumentiert und die Cadence-Tabelle bestätigt:</p>
+    <table>
+      <thead><tr><th>Wann</th><th>Was</th><th>Workflow</th><th>Secret nötig?</th></tr></thead>
+      <tbody>
+        <tr><td>Mo 06:00 UTC</td><td>Quellen-Scan</td><td>anthropic-weekly-scan.yml</td><td>nein</td></tr>
+        <tr><td>1. des Monats 06:00 UTC</td><td>Topic-Synthese</td><td>anthropic-monthly-synthesis.yml</td><td>ja (ANTHROPIC_API_KEY)</td></tr>
+        <tr><td>Ad-hoc</td><td>manueller Trigger</td><td>beide (workflow_dispatch)</td><td>je nach Workflow</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>5. Achse C - Quellen-Strategie</h2>
+  <div class="card">
+    <p>Das Konzept: <code class="inline">sources.yaml</code> als einzige Quelle der Wahrheit, mit
+    Prioritäts-Stufen und einer Feed-vs-Scrape-Unterscheidung. In dieser Session durch die echte
+    Probe verfeinert.</p>
+    <h3>Prioritäts-Stufen</h3>
+    <table>
+      <thead><tr><th>Stufe</th><th>Was</th><th>Beispiele</th></tr></thead>
+      <tbody>
+        <tr><td><b>P0</b></td><td>Offizielle Anthropic-Oberflächen</td><td>Anthropic News, Research, Engineering, Docs, Claude-Code-Releases</td></tr>
+        <tr><td><b>P1</b></td><td>Anthropic-Mitarbeiter + High-Signal-Beobachter</td><td>Boris Cherny, Erik Schluntz, Cat Wu, Thariq Shihipar, Sholto Douglas, Simon Willison</td></tr>
+        <tr><td><b>P2</b></td><td>Community-Signal</td><td>r/ClaudeAI, r/AI_Agents</td></tr>
+      </tbody>
+    </table>
+    <h3>Probe-Befund: nicht jede Quelle hat einen brauchbaren Feed</h3>
+    <table>
+      <thead><tr><th>Quelle</th><th>Probe-Ergebnis</th><th>Entscheidung</th></tr></thead>
+      <tbody>
+        <tr><td>claude-code-releases</td><td class="pro">Atom-Feed funktioniert (v2.1.133-2.1.139)</td><td>verified: true</td></tr>
+        <tr><td>simon-willison</td><td class="pro">Atom-Feed funktioniert (5 Einträge)</td><td>verified: true</td></tr>
+        <tr><td>anthropic-news</td><td class="con">/news/rss.xml -> HTTP 404</td><td>feed: null, scrape-only</td></tr>
+        <tr><td>reddit-claudeai / reddit-aiagents</td><td class="con">/.rss -> HTTP 403 (blockt Default-UA)</td><td>feed: null, braucht UA-Rotation</td></tr>
+      </tbody>
+    </table>
+    <p><b>Konzept-Konsequenz:</b> <code class="inline">sources.yaml</code> bekam ein
+    <code class="inline">feed: null</code> für scrape-only Quellen und ein
+    <code class="inline">verified:</code>-Flag, das ein Reviewer nach Prüfung umlegt. Damit ist die
+    Quellen-Registry ehrlich darüber, was automatisch geht und was Handarbeit braucht.</p>
+  </div>
+
+  <h2>6. Achse D - Output-Form</h2>
+  <div class="card">
+    <p>In welcher Form wird Wissen abgelegt? Drei Formen, die sich nicht ausschließen, sondern
+    je nach Zweck gewählt werden:</p>
+    <table>
+      <thead><tr><th>Form</th><th>Wofür</th><th>Beispiel aus dieser Session</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Markdown-Atome</b></td>
+          <td>Wissens-Bausteine, Quellen-Logs, maschinen- und menschenlesbar, gut diff-bar</td>
+          <td>monitoring/logs/2026-W20.md, sources.yaml</td>
+        </tr>
+        <tr>
+          <td><b>Markdown-Dossiers</b></td>
+          <td>Synthetisierte Themen-Tiefe, re-synthetisierbar durch die monatliche Pipeline</td>
+          <td>topics/output-formats-html-vs-markdown.md (geerbt)</td>
+        </tr>
+        <tr>
+          <td><b>HTML-Artefakte</b></td>
+          <td>Entscheidungs- und Diagnosehilfen für Menschen, mit visueller Struktur und kleiner Interaktion</td>
+          <td>slash-command-diagnose.html, dieses Dokument</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><b>Entscheidungsregel (in dieser Session etabliert):</b> Wissen, das maschinell weiterverarbeitet
+    oder versioniert wird -> Markdown. Wissen, das ein Mensch schnell verstehen und entscheiden soll
+    -> HTML-Artefakt. Beide leben im Repo, HTML-Artefakte vorläufig unter <code class="inline">docs/</code>
+    bzw. <code class="inline">concept/</code>.</p>
+  </div>
+
+  <h2>7. Alle getroffenen Entscheidungen im Überblick</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th>#</th><th>Entscheidung</th><th>Begründung</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>KB als Subtree <code class="inline">anthropic-intelligence/</code> in knowledge</td><td>Allowlist-Falle umgehen, sofort handlungsfähig</td><td><span class="badge gewaehlt">gewählt</span></td></tr>
+        <tr><td>2</td><td>Hybrid-Automatisierung: wöchentlicher Scan + monatliche Synthese</td><td>Signal ohne Secret, Verdichtung mit Key</td><td><span class="badge geerbt">geerbt</span>, bestätigt</td></tr>
+        <tr><td>3</td><td><code class="inline">sources.yaml</code> als zentrale Quellen-Registry</td><td>Eine Quelle der Wahrheit, P0/P1/P2, verified-Flag</td><td><span class="badge entschieden">entschieden</span></td></tr>
+        <tr><td>4</td><td>Kaputte Feeds auf <code class="inline">feed: null</code> (scrape-only)</td><td>Probe deckte 404/403 auf - Registry bleibt ehrlich</td><td><span class="badge entschieden">entschieden</span></td></tr>
+        <tr><td>5</td><td><code class="inline">/new-repo-bootstrap</code> Skill als Dauerlösung</td><td>Allowlist-Falle kein Einzelfall - Pattern festhalten</td><td><span class="badge entschieden">entschieden</span></td></tr>
+        <tr><td>6</td><td>HTML für Entscheidungshilfen, Markdown für Wissens-Atome</td><td>Form folgt Zweck (Mensch vs. Maschine)</td><td><span class="badge entschieden">entschieden</span></td></tr>
+        <tr><td>7</td><td>Stdlib-XML statt feedparser in der Probe</td><td>Sandbox konnte sgmllib3k nicht bauen - Probe trotzdem möglich</td><td><span class="badge entschieden">entschieden</span> (nur Probe)</td></tr>
+        <tr><td>8</td><td>Umlaut-Regel gilt auch in Copy-Blöcken</td><td>CLAUDE.md-Regel konsequent, Owner-Entscheidung in dieser Session</td><td><span class="badge entschieden">entschieden</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>8. Bewertungs-Matrix der Hauptkonzepte</h2>
+  <div class="card">
+    <p>Kriterien nach dem Standard-Schema: Einfachheit, Korrektheit, Langfristigkeit (je 1-10).
+    Das gewählte Konzept ist fett.</p>
+    <table>
+      <thead><tr><th>Achse</th><th>Konzept</th><th>Einf.</th><th>Korr.</th><th>Langfr.</th><th>Gesamt</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="3">A. Repo</td><td>Eigenes Repo</td><td>4</td><td>9</td><td>9</td><td>7.3</td></tr>
+        <tr><td><b>Subtree in knowledge</b></td><td><b>9</b></td><td><b>7</b></td><td><b>6</b></td><td><b>7.3</b></td></tr>
+        <tr><td>Teil von claude-config</td><td>6</td><td>4</td><td>4</td><td>4.7</td></tr>
+        <tr><td rowspan="4">B. Automation</td><td>Manuell</td><td>8</td><td>5</td><td>3</td><td>5.3</td></tr>
+        <tr><td>Nur RSS-Scan</td><td>7</td><td>6</td><td>6</td><td>6.3</td></tr>
+        <tr><td>Nur LLM-Synthese</td><td>4</td><td>7</td><td>6</td><td>5.7</td></tr>
+        <tr><td><b>Hybrid</b></td><td><b>5</b></td><td><b>8</b></td><td><b>8</b></td><td><b>7.0</b></td></tr>
+        <tr><td rowspan="2">D. Output</td><td><b>Form folgt Zweck (MD + HTML)</b></td><td><b>7</b></td><td><b>8</b></td><td><b>8</b></td><td><b>7.7</b></td></tr>
+        <tr><td>Nur ein Format erzwingen</td><td>8</td><td>5</td><td>5</td><td>6.0</td></tr>
+      </tbody>
+    </table>
+    <p class="legend">Bei Achse A entscheidet trotz Gleichstand die sofortige Handlungsfähigkeit -
+    siehe Abschnitt 3. Achse C (Quellen) ist keine Entweder-oder-Wahl, sondern eine Registry-Mechanik,
+    darum hier nicht als Matrix.</p>
+  </div>
+
+  <h2>9. Welche Wege können wir gehen</h2>
+  <div class="card">
+    <p>Ab hier gibt es drei plausible Entwicklungspfade. Sie schließen sich nicht alle aus.</p>
+
+    <div class="weg">
+      <h4>Weg A - Subtree bleibt dauerhaft</h4>
+      <p>anthropic-intelligence bleibt für immer Unterordner von knowledge.</p>
+      <p><b>Pro:</b> Null Migrationsaufwand. <b>Contra:</b> knowledge-Repo bleibt thematisch gemischt,
+      kein eigenes Issue-Tracking, öffentliche Sichtbarkeit bleibt ein Thema.</p>
+      <p class="verdict" style="color:var(--warn)">Vertretbar als Dauerzustand, aber nicht das sauberste Ziel.</p>
+    </div>
+
+    <div class="weg">
+      <h4>Weg B - Späterer Subtree-Split in eigenes Repo</h4>
+      <p>Sobald die Allowlist erweitert ist: <code class="inline">git subtree split --prefix=anthropic-intelligence -b export</code>,
+      dann in ein frisches Repo <code class="inline">klangschalen/anthropic-intelligence</code> pushen.</p>
+      <p><b>Pro:</b> Erreicht das langfristig korrekte Konzept 1, ohne den Start zu blockieren.
+      <b>Contra:</b> Braucht eine bewusste Owner-Aktion (Repo anlegen, Allowlist erweitern, Session-Neustart).</p>
+      <p class="verdict" style="color:var(--ok)">Empfohlenes Ziel. Der Subtree war von Anfang an als Brückenlösung gedacht.</p>
+    </div>
+
+    <div class="weg">
+      <h4>Weg C - Zusammenführung mit engineering-principles</h4>
+      <p>engineering-principles ist bereits eine zitierfähige Wissens-Bibliothek. Statt zwei Wissens-Müttern
+      könnte anthropic-intelligence ein Bereich darin werden.</p>
+      <p><b>Pro:</b> Eine Wissens-Mutter statt zwei, weniger Drift-Risiko. <b>Contra:</b> engineering-principles
+      hat selbst eine offene Migration nach claude-config (MIG-001..003) - erst klären, wohin das führt.</p>
+      <p class="verdict" style="color:var(--info)">Erst prüfen, nicht parallel entscheiden. Abhängig von der engineering-principles-Migration.</p>
+    </div>
+  </div>
+
+  <h2>10. Offene Fragen für den Bau in Claude Code</h2>
+  <div class="card">
+    <p>Diese Fragen müssen beantwortet sein, bevor das Konzept verlässlich als Claude-Code-Bauprojekt
+    läuft. Aufklappen für Kontext.</p>
+
+    <h3>Block 1 - Secrets und Konfiguration</h3>
+    <details>
+      <summary>Wer setzt <code class="inline">ANTHROPIC_API_KEY</code> als Repo-Secret, und wann?</summary>
+      <div class="det-body">
+        Die monatliche Synthese läuft ohne diesen Key nicht. Der Key kann nur über die GitHub-Web-UI
+        gesetzt werden (Settings -> Secrets -> Actions) - das ist eine Owner-Aktion, Claude kann es nicht.
+        <div class="why">Warum kritisch: ohne den Key ist Achse B nur zur Hälfte funktionsfähig (Scan ja, Synthese nein).</div>
+      </div>
+    </details>
+    <details>
+      <summary>Wird <code class="inline">ANTHROPIC_MODEL</code> als Repo-Variable festgelegt?</summary>
+      <div class="det-body">
+        Der Synthese-Workflow nutzt eine Modell-Variable mit Default. Festlegen auf welchen Stand
+        (z.B. claude-opus-4-7) oder Default belassen und nur bei Bedarf überschreiben?
+        <div class="why">Warum relevant: bestimmt Kosten und Qualität jeder monatlichen Synthese.</div>
+      </div>
+    </details>
+
+    <h3>Block 2 - Quellen-Mechanik</h3>
+    <details>
+      <summary>Reddit-Feeds: UA-Rotation im Scanner einbauen oder P2 ganz weglassen?</summary>
+      <div class="det-body">
+        Die Probe zeigte HTTP 403 auf den Reddit-RSS-Feeds gegen den Default-User-Agent. Optionen:
+        (a) Scanner sendet einen echten Browser-UA, (b) Reddit-Quellen ganz streichen, (c) auf eine
+        offizielle Reddit-API umstellen.
+        <div class="why">Warum relevant: P2-Community-Signal ist nice-to-have, aber ein 403 in jedem Lauf verrauscht das Log.</div>
+      </div>
+    </details>
+    <details>
+      <summary>Anthropic-News ohne RSS: HTML-Differ bauen oder manueller Wochen-Check?</summary>
+      <div class="det-body">
+        /news/rss.xml gibt 404. Optionen: einen kleinen HTML-Differ bauen, der die News-Seite scrapt
+        und Änderungen meldet, oder die Quelle bewusst als "manual check" im Log führen.
+        <div class="why">Warum kritisch: Anthropic News ist eine P0-Quelle - die wichtigste, und ausgerechnet die ohne Feed.</div>
+      </div>
+    </details>
+    <details>
+      <summary>feedparser vs. stdlib: was läuft im echten Workflow auf GitHub Actions?</summary>
+      <div class="det-body">
+        Die Probe lief mit stdlib-XML, weil die Sandbox feedparsers sgmllib3k-Abhängigkeit nicht bauen
+        konnte. Auf GitHub-Actions-Runnern ist feedparser meist installierbar. Frage: setzt der Workflow
+        feedparser voraus, oder wird der stdlib-Parser zur robusten Dauerlösung?
+        <div class="why">Warum relevant: bestimmt, ob fetch_sources.py eine externe Abhängigkeit braucht oder nicht.</div>
+      </div>
+    </details>
+
+    <h3>Block 3 - Synthese und Qualität</h3>
+    <details>
+      <summary>Standardisiertes Dossier-Format - welches Frontmatter ist Pflicht?</summary>
+      <div class="det-body">
+        Damit die monatliche Pipeline Dossiers verlässlich re-synthetisieren kann, brauchen sie ein
+        festes Frontmatter-Schema: topic-slug, status (draft/review/stable), last_synthesized, sources.
+        Welche Felder sind Pflicht, welche optional?
+        <div class="why">Warum kritisch: ohne festes Schema kann die Pipeline nicht entscheiden, was sie anfassen darf.</div>
+      </div>
+    </details>
+    <details>
+      <summary>Human-in-the-Loop: reviewt jemand die monatliche Synthese vor Merge?</summary>
+      <div class="det-body">
+        Erzeugt der Synthese-Workflow einen PR (Review möglich) oder committed er direkt? Bei einer
+        LLM-Synthese mit Halluzinations-Risiko spricht viel für den PR-Weg.
+        <div class="why">Warum kritisch: KB-Inhalt ohne Review = dokumentiertes Wunschdenken statt verifiziertem Wissen.</div>
+      </div>
+    </details>
+    <details>
+      <summary>Cadence: reicht wöchentlich/monatlich beim aktuellen Release-Tempo?</summary>
+      <div class="det-body">
+        Die Probe zeigte 5 Claude-Code-Releases in 5 Tagen. Bei dem Tempo ist ein wöchentlicher Scan
+        evtl. zu grob für P0-Releases. Eventuell: P0-Releases täglich, Rest wöchentlich.
+        <div class="why">Warum relevant: eine KB, die dem Thema hinterherhinkt, verliert ihren Zweck.</div>
+      </div>
+    </details>
+
+    <h3>Block 4 - Struktur und Zukunft</h3>
+    <details>
+      <summary>Subtree-Split-Trigger: ab wann lohnt das eigene Repo (Weg B)?</summary>
+      <div class="det-body">
+        Konkretes Kriterium festlegen: z.B. "sobald mehr als X Dossiers existieren" oder "sobald die
+        Allowlist ohnehin erweitert wird". Ohne Trigger bleibt Weg A der Default aus Trägheit.
+        <div class="why">Warum relevant: der Subtree war als Brücke gedacht - ohne Trigger wird die Brücke zum Dauerzustand.</div>
+      </div>
+    </details>
+    <details>
+      <summary>Verhältnis zu engineering-principles - eine Wissens-Mutter oder zwei?</summary>
+      <div class="det-body">
+        engineering-principles ist eine zitierfähige Lehre-Bibliothek mit eigener offener Migration
+        (MIG-001..003 nach claude-config). Bevor anthropic-intelligence wächst: klären, ob es ein
+        eigenständiger Strang bleibt oder später dort andockt.
+        <div class="why">Warum kritisch: zwei parallele Wissens-Mütter erzeugen genau den Drift, den die Mutter-Regeln verhindern sollen.</div>
+      </div>
+    </details>
+    <details>
+      <summary>Durchsuchbarkeit: wird <code class="inline">/kb-query</code> auf der KB aufgebaut?</summary>
+      <div class="det-body">
+        Der Command <code class="inline">/kb-query</code> existiert in claude-config, ist aber als
+        "NOCH NICHT VERFUEGBAR" markiert (wartet auf einen MCP-Server). Frage: wird anthropic-intelligence
+        die erste echte Datenquelle dafür, oder bleibt die KB rein dateibasiert durchsuchbar (grep/glob)?
+        <div class="why">Warum relevant: bestimmt, ob die KB ein abfragbares System wird oder eine Sammlung von Dateien.</div>
+      </div>
+    </details>
+    <details>
+      <summary>Gehören die HTML-Artefakte in die KB oder sind sie ein separates Format?</summary>
+      <div class="det-body">
+        Diese Session hat HTML-Artefakte sowohl nach claude-config/docs/ als auch (dieses hier) in den
+        KB-Subtree gelegt. Frage: sind HTML-Artefakte ein offizieller Bestandteil der KB-Struktur
+        (eigener Ordner, in der CADENCE referenziert) oder ein loses Begleitformat?
+        <div class="why">Warum relevant: ohne Festlegung verstreuen sich Artefakte über mehrere Repos.</div>
+      </div>
+    </details>
+  </div>
+
+  <h2>11. Zusammenfassung zum Kopieren</h2>
+  <div class="card">
+    <div class="copy-head">
+      <h3 style="margin:0">Markdown-Block</h3>
+      <button class="copy-btn" onclick="copyMd(event)">Markdown kopieren</button>
+    </div>
+    <pre id="md-block"># Knowledge Base Aufbau - Entscheidungen und offene Fragen
+
+## Was diese Session getan hat
+- PR #1 in klangschalen/knowledge geöffnet (geerbte KB-Struktur sichtbar gemacht)
+- Echte Quellen-Probe gefahren (stdlib statt feedparser)
+- sources.yaml mit Probe-Befunden korrigiert + Log committed
+- /new-repo-bootstrap Skill gegen die Allowlist-Falle gebaut
+- claude-config komplett geladen (Kontext)
+- 2 HTML-Artefakte gebaut (slash-command-diagnose + dieses Konzept-Dokument)
+
+## Getroffene Entscheidungen
+1. Repo-Struktur: Subtree anthropic-intelligence/ in knowledge (NICHT eigenes Repo)
+   - Grund: Allowlist-Falle. Claude kann Repos nicht anlegen, Allowlist nicht ändern.
+   - Ausstiegspfad: späterer git subtree split in eigenes Repo bleibt offen.
+2. Automatisierung: Hybrid (geerbt) - wöchentlicher Scan ohne Secret + monatliche Synthese mit Key
+3. Quellen: sources.yaml als zentrale Registry, P0/P1/P2, verified-Flag
+4. Kaputte Feeds (Anthropic-News 404, Reddit 403) auf feed:null = scrape-only gesetzt
+5. /new-repo-bootstrap Skill als Dauerlösung der Allowlist-Falle
+6. Output-Form: Markdown für Wissens-Atome, HTML für Entscheidungs-/Diagnosehilfen
+7. Probe nutzt stdlib-XML statt feedparser (Sandbox-Limitation)
+8. Umlaut-Regel gilt auch in Copy-Blöcken (Owner-Entscheidung)
+
+## Bewertung der Hauptkonzepte (Einfachheit/Korrektheit/Langfristig)
+- Repo: Eigenes Repo 4/9/9=7.3 | SUBTREE 9/7/6=7.3 (gewählt) | claude-config 6/4/4=4.7
+- Automation: Manuell 5.3 | Nur Scan 6.3 | Nur Synthese 5.7 | HYBRID 7.0 (gewählt)
+- Output: FORM FOLGT ZWECK 7.7 (gewählt) | Ein Format erzwingen 6.0
+
+## Mögliche Wege
+- Weg A: Subtree bleibt dauerhaft - vertretbar, nicht ideal
+- Weg B: späterer Subtree-Split in eigenes Repo - EMPFOHLENES ZIEL
+- Weg C: Zusammenführung mit engineering-principles - erst prüfen, abhängig von MIG-Migration
+
+## Offene Fragen für den Bau in Claude Code
+Secrets/Config:
+- Wer setzt ANTHROPIC_API_KEY als Repo-Secret, wann?
+- ANTHROPIC_MODEL als Repo-Variable festlegen?
+Quellen-Mechanik:
+- Reddit-Feeds: UA-Rotation einbauen oder P2 weglassen?
+- Anthropic-News ohne RSS: HTML-Differ bauen oder manueller Check?
+- feedparser vs stdlib im echten Workflow?
+Synthese/Qualität:
+- Standardisiertes Dossier-Frontmatter - welche Pflichtfelder?
+- Human-in-the-Loop: Synthese als PR oder Direkt-Commit?
+- Cadence: reicht wöchentlich bei 5 Releases in 5 Tagen?
+Struktur/Zukunft:
+- Subtree-Split-Trigger: ab wann lohnt Weg B konkret?
+- Verhältnis zu engineering-principles - eine Mutter oder zwei?
+- Wird /kb-query auf der KB aufgebaut?
+- Sind HTML-Artefakte offizieller KB-Bestandteil oder Begleitformat?
+
+## Nächster Schritt
+- Offene Fragen Block 1 (Secrets) zuerst klären - blockiert sonst die halbe Automatisierung
+- Dann Block 3 (Dossier-Format + Review-Weg) - bestimmt die Synthese-Qualität</pre>
+    <p class="legend">Hinweis: Als Markdown formatiert - direkt einfügbar in Notizen, GitHub-Issues oder Plan-Dateien.</p>
+  </div>
+
+  <footer>
+    Sound-Spirit Engineering - Session-Review und Konzept-Dokument - eigenständige HTML-Datei, keine externen Abhängigkeiten.
+  </footer>
+
+</div>
+
+<script>
+  function copyMd(ev) {
+    var txt = document.getElementById("md-block").innerText;
+    var btn = ev.target;
+    function done() { btn.textContent = "Kopiert"; setTimeout(function(){ btn.textContent = "Markdown kopieren"; }, 1800); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch(e) { btn.textContent = "Bitte manuell markieren"; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done, fallback);
+    } else { fallback(); }
+  }
+</script>
+</body>
+</html>
