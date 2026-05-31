@@ -22,3 +22,8 @@ The knowledge base serves as a centralized repository of information, aimed at d
 - **Review Process**: Regular reviews will be conducted to ensure the content remains accurate and useful.
 
 By leveraging this knowledge base, we can ensure that all team members have access to the same high-quality resources, leading to better project outcomes and an overall increase in organizational knowledge.
+
+## Ressourcen / Resources
+
+- **Sicherheit / SSH** — [SSH-Schlüssel: Ist-Zustand, Rotation & der bessere Weg](security/ssh/2026-05-31-ssh-schluessel-sota.md)
+  ([HTML-Version](security/ssh/2026-05-31-ssh-schluessel-sota.html)) · verständlich für Frank, Michael & Christina
