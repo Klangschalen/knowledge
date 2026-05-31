@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSH-Schlüssel SOTA — Sound-Spirit Wissensbasis</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --ink: #1f2933; --muted: #6b7280;
+    --line: #e5e7eb; --accent: #2563eb; --good: #15803d; --warn: #b45309;
+    --bad: #b91c1c; --good-bg: #ecfdf5; --warn-bg: #fffbeb; --bad-bg: #fef2f2;
+    --code-bg: #1e293b; --code-ink: #e2e8f0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; }
+  header.hero {
+    background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff;
+    border-radius: 16px; padding: 36px 32px; margin-bottom: 28px;
+    box-shadow: 0 8px 30px rgba(37,99,235,.25);
+  }
+  header.hero h1 { margin: 0 0 8px; font-size: 28px; }
+  header.hero p { margin: 0; opacity: .92; }
+  .meta { font-size: 13px; color: var(--muted); margin: -12px 0 28px; }
+  .audience { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .pill {
+    background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.35);
+    color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 13px;
+  }
+  section.card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px 28px; margin-bottom: 22px; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  h2 { font-size: 22px; margin: 4px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+  h3 { font-size: 17px; margin: 22px 0 8px; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f3f4f6; font-weight: 600; }
+  td.center, th.center { text-align: center; }
+  code { background: #eef2f7; padding: 1px 6px; border-radius: 5px; font-size: 13.5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  pre {
+    background: var(--code-bg); color: var(--code-ink); padding: 14px 16px;
+    border-radius: 10px; overflow-x: auto; font-size: 13.5px; line-height: 1.5;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+  .callout { border-radius: 10px; padding: 14px 18px; margin: 16px 0; border-left: 4px solid; }
+  .callout.good { background: var(--good-bg); border-color: var(--good); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn); }
+  .callout.bad  { background: var(--bad-bg);  border-color: var(--bad); }
+  .callout p { margin: 6px 0; }
+  .key-good { color: var(--good); font-weight: 600; }
+  .key-bad  { color: var(--bad);  font-weight: 600; }
+  .rank { font-size: 15px; letter-spacing: 1px; }
+  .step { background: #f8fafc; border: 1px solid var(--line); border-radius: 10px;
+    padding: 6px 16px; margin: 10px 0; }
+  details { margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; }
+  .toc a { color: var(--accent); text-decoration: none; }
+  .toc li { margin: 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>SSH-Schlüssel: Wie es läuft, was Rotation bedeutet, und der bessere Weg</h1>
+  <p>Eine verständliche SOTA-Analyse für unser Team — von Grund auf erklärt.</p>
+  <div class="audience">
+    <span class="pill">👔 Frank — Überblick &amp; Entscheidung</span>
+    <span class="pill">🔧 Michael — Umsetzung</span>
+    <span class="pill">📋 Christina — Verständnis</span>
+  </div>
+</header>
+
+<p class="meta">Erstellt 2026-05-31 · Sound-Spirit Wissensbasis · Kontext: PR&nbsp;#64 (CISA-KEV SSH-Versions-Erkennung)</p>
+
+<section class="card toc">
+  <h2>Auf einen Blick</h2>
+  <ol>
+    <li><a href="#t1">Was ist SSH überhaupt? (für Einsteiger)</a></li>
+    <li><a href="#t2">Was wir gerade machen (Ist-Zustand)</a></li>
+    <li><a href="#t3">Was bedeutet „SSH rotieren"?</a></li>
+    <li><a href="#t4">Die Techniken im Vergleich</a></li>
+    <li><a href="#t5">Bezug zu unserem neuen Scanner</a></li>
+    <li><a href="#t6">Empfehlung &amp; nächster Schritt</a></li>
+  </ol>
+</section>
+
+<section class="card" id="t1">
+  <h2>1 · Was ist SSH überhaupt?</h2>
+  <p><strong>SSH</strong> (Secure Shell) ist die Art, wie sich ein Computer bei einem
+  anderen <strong>sicher anmeldet</strong>, um dort Befehle auszuführen oder Dateien zu lesen.
+  Wenn Michael „auf den Server geht", benutzt er SSH.</p>
+  <p>Statt eines Passworts nutzt man ein <strong>Schlüsselpaar</strong> — das wichtigste Bild:</p>
+  <table>
+    <tr><th>Teil</th><th>Was es ist</th><th>Wo es liegt</th><th>Bild</th></tr>
+    <tr><td class="key-bad">Privater Schlüssel</td><td>Die geheime Hälfte</td><td>Beim Anmelder (Michaels Laptop / bei uns: GitHub)</td><td>Dein Hausschlüssel — gibst du <strong>niemals</strong> her</td></tr>
+    <tr><td class="key-good">Öffentlicher Schlüssel</td><td>Die offene Hälfte</td><td>Auf dem Server in der Liste <code>authorized_keys</code></td><td>Das Türschloss — darf jeder sehen</td></tr>
+  </table>
+  <p>Bei der Anmeldung stellt der Server eine Rechenaufgabe, die <em>nur</em> mit dem
+  privaten Schlüssel lösbar ist. Der private Schlüssel verlässt dabei nie den Anmelder —
+  es wird kein Passwort über die Leitung geschickt.</p>
+  <div class="callout good">
+    <p><strong>Merksatz:</strong> Öffentlicher Schlüssel = Schloss (darf rumliegen).
+    Privater Schlüssel = Schlüssel (streng geheim). <strong>Wer den privaten Schlüssel hat, kommt rein.</strong></p>
+  </div>
+</section>
+
+<section class="card" id="t2">
+  <h2>2 · Was wir gerade machen (Ist-Zustand)</h2>
+  <h3>2a · Der CISA-KEV-Scanner (neu, seit heute)</h3>
+  <p>Damit unser Sicherheits-Scanner in GitHub Actions die <strong>echten
+  Software-Versionen</strong> lesen kann (WordPress, Plugins, Gambio …), bekam er einen
+  SSH-Zugang. Der private Schlüssel liegt als GitHub-Secret <code>PROFIHOST_SSH_KEY</code>.
+  Er <strong>liest</strong> nur ein paar Versions-Dateien (<code>cat</code>, <code>grep</code>, <code>php -v</code>).</p>
+  <h3>2b · Michaels Schlüssel (gewachsen)</h3>
+  <p>Michael nutzt SSH für <strong>viele Systeme</strong> — Schnittstellen, Wartung,
+  Deployments, Backups. In der Praxis ist oft <strong>ein einziger, langlebiger
+  Schlüssel</strong> im Einsatz, der überall passt. Bequem, aber der schwächste Punkt.</p>
+  <div class="callout warn">
+    <p><strong>Das versteckte Problem:</strong> „Nur-lesend" ist aktuell nur eine
+    <strong>Vereinbarung in unserem Code</strong> — keine Regel, die der <em>Server</em> erzwingt.</p>
+    <p>Der Schlüssel selbst hat sehr wahrscheinlich vollen Shell-Zugang. Würde der
+    GitHub-Secret jemals geleakt, könnte ein Angreifer damit <strong>nicht nur lesen</strong>,
+    sondern alles tun, was der Schlüssel darf. Echte Sicherheit kommt erst, wenn der
+    <em>Server</em> den Schlüssel einschränkt (Teil 6).</p>
+  </div>
+</section>
+
+<section class="card" id="t3">
+  <h2>3 · Was bedeutet „SSH rotieren"?</h2>
+  <p><strong>Rotation = den Schlüssel regelmäßig austauschen</strong>, so wie man ein
+  Passwort regelmäßig ändert. Genau deine Frage.</p>
+  <div class="step">1 · Neues Schlüsselpaar erzeugen (neues Schloss + neuer Schlüssel)</div>
+  <div class="step">2 · Neues <strong>Schloss</strong> zur <code>authorized_keys</code> hinzufügen</div>
+  <div class="step">3 · Neuen <strong>privaten</strong> Schlüssel überall eintragen (z.&nbsp;B. GitHub-Secret)</div>
+  <div class="step">4 · Testen, dass alles läuft</div>
+  <div class="step">5 · <strong>Altes Schloss entfernen</strong> — alter Schlüssel ist ab jetzt tot</div>
+  <table>
+    <tr><th>Ohne Rotation</th><th>Mit Rotation</th></tr>
+    <tr><td>Ein geleakter Schlüssel funktioniert <strong>für immer</strong> — bis jemand zufällig merkt, dass er weg ist.</td>
+        <td>Ein geleakter Schlüssel funktioniert nur <strong>bis zur nächsten Rotation</strong> — danach wertlos.</td></tr>
+  </table>
+  <div class="callout good">
+    <p><strong>Analogie:</strong> Ein Hotel wechselt nach jedem Gast die Türcodes. Selbst
+    wenn ein Gast den Code mitnimmt, nützt er ihm beim nächsten Mal nichts mehr.</p>
+  </div>
+  <p>Rotation <strong>verkleinert das Zeitfenster</strong>, in dem ein gestohlener
+  Schlüssel Schaden anrichten kann — sie verhindert den Diebstahl nicht, sorgt aber
+  dafür, dass er nicht ewig nachwirkt.</p>
+</section>
+
+<section class="card" id="t4">
+  <h2>4 · Die Techniken im Vergleich</h2>
+  <p>Von „bequem aber unsicher" nach „sicher aber aufwändiger":</p>
+
+  <h3>A · Ein Schlüssel für alles <span class="rank">(heutiger De-facto-Stand)</span></h3>
+  <p>Ein langlebiger „Generalschlüssel". Leakt er, ist <strong>alles</strong> offen, und
+  unbegrenzt. Man weiß nie, wer was getan hat. <span class="key-bad">❌ Veraltet.</span></p>
+
+  <h3>B · Ein eigener Schlüssel pro Zweck</h3>
+  <p>Ein Schlüssel <em>nur</em> für den Scanner, einer für Schnittstellen, einer für
+  Backups. Leakt einer, ist nur <em>dieser eine</em> Bereich betroffen.
+  <span class="key-good">✅ Prinzip „Least Privilege".</span></p>
+
+  <h3>C · Eingeschränkter Schlüssel (forced command)</h3>
+  <p>In der <code>authorized_keys</code> schreibt man <em>vor</em> den Schlüssel, was er darf:</p>
+  <pre><code>command="/usr/local/bin/inventar-readonly.sh",restrict ssh-ed25519 AAAA... scanner@github</code></pre>
+  <p>Jetzt ist „nur-lesend" <strong>vom Server erzwungen</strong>. Selbst mit gestohlenem
+  Schlüssel kann ein Angreifer nur das eine Skript auslösen — keine Shell, kein Löschen.
+  <span class="key-good">✅✅ Größter Gewinn für unseren Scanner-Fall.</span></p>
+
+  <h3>D · Rotation (kombinierbar mit B und C)</h3>
+  <p>Schlüssel regelmäßig (z.&nbsp;B. quartalsweise) oder bei Verdacht tauschen. Begrenzt
+  die Lebensdauer eines Leaks. <span class="key-good">✅ Standard-Hygiene.</span></p>
+
+  <h3>E · SSH-Zertifikate (CA-signiert, kurzlebig)</h3>
+  <p>Eine zentrale „Ausweisstelle" signiert kurzlebige Ausweise (z.&nbsp;B. 8&nbsp;Std). Kein
+  Aufräumen von <code>authorized_keys</code>, Rotation passiert automatisch durch Ablauf.
+  Goldstandard großer Teams — für ein 2-Personen-Team aber vermutlich Overkill.
+  <span class="key-good">✅✅✅ State of the Art.</span></p>
+
+  <table>
+    <tr><th>Technik</th><th class="center">Sicherheit</th><th class="center">Aufwand</th><th>Für uns?</th></tr>
+    <tr><td>A — Ein Schlüssel für alles</td><td class="center">❌</td><td class="center">sehr niedrig</td><td>nein (abbauen)</td></tr>
+    <tr><td>B — Schlüssel pro Zweck</td><td class="center">✅</td><td class="center">niedrig</td><td><strong>ja, sofort</strong></td></tr>
+    <tr><td>C — Eingeschränkter Schlüssel</td><td class="center">✅✅</td><td class="center">mittel</td><td><strong>ja, für Scanner</strong></td></tr>
+    <tr><td>D — Rotation</td><td class="center">✅</td><td class="center">mittel</td><td><strong>ja, quartalsweise</strong></td></tr>
+    <tr><td>E — SSH-Zertifikate</td><td class="center">✅✅✅</td><td class="center">hoch</td><td>später</td></tr>
+  </table>
+</section>
+
+<section class="card" id="t5">
+  <h2>5 · Bezug zu unserem neuen Scanner</h2>
+  <p>Der CISA-KEV-Scanner braucht vom Server <strong>nur sehr wenig</strong>: ein paar
+  Versions-Dateien lesen. Perfekter Kandidat für <strong>B + C</strong>:</p>
+  <ul>
+    <li><strong>B:</strong> ein eigener Schlüssel <code>scanner@github</code>, getrennt von Michaels Generalschlüssel.</li>
+    <li><strong>C:</strong> dieser Schlüssel darf auf dem Server <em>nur</em> ein Lese-Skript ausführen.</li>
+  </ul>
+  <div class="callout good">
+    <p>Dann gilt: Selbst wenn der GitHub-Secret jemals leakt, kann ein Angreifer
+    <strong>nur die Versionsnummern lesen</strong> — also genau das, was eh in der täglichen
+    Mail steht. Kein Schaden möglich.</p>
+  </div>
+</section>
+
+<section class="card" id="t6">
+  <h2>6 · Empfehlung &amp; nächster Schritt</h2>
+  <p><em>ICE = Impact × Confidence × Ease / 100. MUST ≥ 5,0 · SHOULD ≥ 3,0.</em></p>
+  <table>
+    <tr><th>Maßnahme</th><th class="center">I</th><th class="center">C</th><th class="center">E</th><th class="center">ICE</th><th class="center">Stufe</th></tr>
+    <tr><td>1 · Eigener, eingeschränkter Lese-Schlüssel für den Scanner (B+C)</td><td class="center">9</td><td class="center">9</td><td class="center">7</td><td class="center"><strong>5,7</strong></td><td class="center">MUST</td></tr>
+    <tr><td>2 · Schlüssel pro Zweck trennen (Generalschlüssel auflösen)</td><td class="center">8</td><td class="center">8</td><td class="center">5</td><td class="center">3,2</td><td class="center">SHOULD</td></tr>
+    <tr><td>3 · Quartalsweise Rotation mit Ablauf</td><td class="center">6</td><td class="center">8</td><td class="center">6</td><td class="center">2,9</td><td class="center">SHOULD</td></tr>
+    <tr><td>4 · SSH-Zertifikate / CA einführen</td><td class="center">7</td><td class="center">6</td><td class="center">2</td><td class="center">0,8</td><td class="center">WONT (noch)</td></tr>
+  </table>
+
+  <h3>Konkreter nächster Schritt (für Michael, ~15 Min)</h3>
+  <pre><code># 1) Neues Schlüsselpaar
+ssh-keygen -t ed25519 -C "scanner@github" -f scanner_key
+
+# 2) Auf dem Server: Lese-Skript /usr/local/bin/inventar-readonly.sh anlegen
+#    (liest wp-includes/version.php, Plugin-Header, Gambio release_info.php ...)
+
+# 3) Öffentlichen Schlüssel in ~/.ssh/authorized_keys — MIT Einschränkung:
+command="/usr/local/bin/inventar-readonly.sh",restrict ssh-ed25519 AAAA...scanner@github
+
+# 4) Privaten Schlüssel als GitHub-Secret PROFIHOST_SSH_KEY hinterlegen
+# 5) Workflow manuell starten und prüfen, dass Versionen kommen</code></pre>
+  <div class="callout good">
+    <p>Damit ist der Scanner-Zugang <strong>sicher gekapselt</strong>, und ihr habt
+    Technik B + C produktiv im Einsatz — die Grundlage, auf der Rotation (D) später
+    trivial wird.</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Glossar</h2>
+  <table>
+    <tr><th>Begriff</th><th>Einfach erklärt</th></tr>
+    <tr><td>SSH</td><td>Sichere Fernanmeldung an einem anderen Computer.</td></tr>
+    <tr><td>Schlüsselpaar</td><td>Privat (geheim) + öffentlich (Schloss).</td></tr>
+    <tr><td><code>authorized_keys</code></td><td>Die Türschloss-Liste auf dem Server.</td></tr>
+    <tr><td>GitHub-Secret</td><td>Sicherer Tresor in GitHub; im Workflow nutzbar, aber nicht auslesbar.</td></tr>
+    <tr><td>Rotation</td><td>Schlüssel regelmäßig austauschen.</td></tr>
+    <tr><td>Least Privilege</td><td>So wenig Rechte wie möglich vergeben.</td></tr>
+    <tr><td>Forced command</td><td>Server erzwingt, dass ein Schlüssel nur einen Befehl darf.</td></tr>
+    <tr><td>CA / Zertifikat</td><td>Zentrale Ausweisstelle für kurzlebige Zugangs-Ausweise.</td></tr>
+  </table>
+</section>
+
+<footer>Sound-Spirit Wissensbasis · <code>security/ssh/2026-05-31-ssh-schluessel-sota</code> · Markdown-Version im selben Ordner</footer>
+
+</div>
+</body>
+</html>
