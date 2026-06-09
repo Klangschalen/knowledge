@@ -1,0 +1,88 @@
+# Groessen-Definition Klangschalen + Sets
+# Quelle der Wahrheit fuer die PL-Sets-Textpipeline (Schritt: Groessen-Logik).
+# Die PHP-Pipeline liest diese Datei deterministisch - keine LLM-Heuristik.
+schema_version: 1
+stand: 2026-06-09
+quelle: "Frank ChatGPT-Lernstruktur 2026-06 + Handbuch Set-/Schalentexte"
+
+einzelschale:
+  gewicht_klassen:
+    - id: leicht
+      gewicht_g:
+        bis: 500            # < 500 g
+      koerperzonen: [kopf, kopfraum, herz_schulter_impuls]
+      nutzung: [raumklang, kurze_meditation, in_der_hand, ueber_dem_kopf]
+      auflegen_koerper: false       # NICHT fuer klassische Koerpermassage auflegen
+      kinder_geeignet:
+        erlaubt: true
+        bedingung: "nur wenn besonders schoene Vibration UND im Produkt gekennzeichnet"
+      text_empfehlung: "leicht, klar, ideal fuer Raumklang und kurze Meditationen; fuer Massage besser ab 500 g"
+    - id: mittel
+      gewicht_g:
+        von: 500
+        bis: 1000          # 500 - 1000 g
+      koerperzonen: [bauch, herz, ruecken]
+      nutzung: [teil_klangmassage_oben_mittig, raumklang, vielseitig]
+      auflegen_koerper: vorsichtig
+      text_empfehlung: "warm, harmonisch, unterstuetzt die Mitte (Bauch/Herz)"
+    - id: schwer
+      gewicht_g:
+        von: 1000          # > 1000 g
+      koerperzonen: [becken, bauch, fuss]
+      nutzung: [klangmassage_unterkoerper, erdung]
+      auflegen_koerper: true
+      text_empfehlung: "tief, stabil, tragend im unteren Koerper; starkes Werkzeug in der Klangmassage"
+  durchmesser_klassen:
+    - id: klein
+      durchmesser_cm:
+        bis: 15            # < 15 cm
+      charakter: [hell, klar]
+      koerperzonen: [kopf, kopfraum, hand, raumklang]
+    - id: mittel
+      durchmesser_cm:
+        von: 15
+        bis: 20            # 15 - 20 cm
+      charakter: [vielseitig]
+      koerperzonen: [bauch, herz, mitte]
+    - id: gross
+      durchmesser_cm:
+        von: 20            # > 20 cm
+      charakter: [tief]
+      koerperzonen: [becken, bauch, unterkoerper]
+      rolle: massage_basis
+
+set_kategorien:
+  # Einordnung nach Gesamtgewicht des Sets -> steuert auch Text-Umfang (siehe text-umfang-regel.yaml)
+  - id: kompakt
+    gesamtgewicht_kg: { von: 0.8, bis: 1.5 }
+    durchmesser_spanne_cm: { von: 10, bis: 15 }
+    empfohlen_fuer: [raumklang, meditation, kopfanwendungen]
+    nicht_fuer: [tiefe_massage]
+  - id: mittel
+    gesamtgewicht_kg: { von: 1.6, bis: 2.9 }
+    durchmesser_spanne_cm: { von: 13, bis: 22 }
+    empfohlen_fuer: [mischanwendung_obere_zonen, raumklang, teil_massage]
+  - id: profi
+    gesamtgewicht_kg: { von: 3.0, bis: 4.5 }
+    durchmesser_spanne_cm: { von: 16, bis: 26 }
+    empfohlen_fuer: [klangmassage_bauch_becken_fuss, mitte, kopf]
+  - id: xxl
+    gesamtgewicht_kg: { von: 4.5 }   # > 4,5 kg
+    durchmesser_spanne_cm: { von: 20, bis: 31 }
+    empfohlen_fuer: [tiefe_koerperarbeit, gruppen, profi_setting]
+
+set_rollen:
+  # typische Zuordnung der Schalen innerhalb eines Sets
+  - rolle: groesste_schale
+    bereich: [becken, bauch]
+    klangcharakter: [tief, voll, stabil]
+    funktion: "Fundament, Unterkoerper, Erdung, Massage-Basis"
+  - rolle: mittlere_schale
+    bereich: [bauch, herz, ruecken]
+    klangcharakter: [warm, harmonisch]
+    funktion: "Mitte verbinden, Herz/Brust beruhigen"
+  - rolle: kleinste_schale
+    bereich: [kopf, kopfraum]
+    klangcharakter: [hell, klar]
+    funktion: "Abschluss, Fokus, Raumimpuls"
+    auflegen_koerper: false   # selten direkt auflegen, eher Impuls
