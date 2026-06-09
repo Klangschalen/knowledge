@@ -1,0 +1,60 @@
+# Block-Schnipsel: kleine Text-Bausteine ("Bloecke"), die je nach Set zusammengesetzt werden.
+# Pipeline-Schritt: Block-Auswahl nach Set-Groesse -> Zusammenfuegen.
+# Welche Bloecke + wie ausfuehrlich, steuert text-umfang-regel.yaml (Set-Kategorie).
+schema_version: 1
+stand: 2026-06-09
+
+bloecke:
+  - id: wirkungsessenz
+    html_klasse: aba-info-intro
+    pflicht: true
+    inhalt: "H2 + 3-5 Woerter Wirkungsessenz (z.B. Tiefer Halt - Warme Mitte - Klare Weite)"
+  - id: kurzbeschreibung
+    pflicht: true
+    zeichen: "siehe text-umfang-regel (je Set-Kategorie)"
+    inhalt: "Nutzen + Ziel + Gefuehl, ohne Fachsprache, positive Frames"
+  - id: schalen_block
+    html_klasse: aba-info-wirkung-planetenschale
+    pflicht_ab_kategorie: mittel   # bei 'kompakt' optional zusammengefasst
+    je_schale: true
+    inhalt: "Rolle + 2-3 Wirkbegriffe (tief/warm/klar) + Koerperbereich + Anwendung"
+  - id: einsatz_koerper
+    html_klasse: aba-info-region
+    pflicht: true
+    inhalt: "Einsatz nach Gewicht/Groesse (aus groessen-definition abgeleitet)"
+  - id: klangbeispiel
+    html_klasse: aba-info-klangbeispiel
+    pflicht: true
+    inhalt: "Frage 'Wie klingt dieses Set?' + Sound-Player Originalklang; KEINE Nachklang-Sekunden"
+  - id: optik
+    html_klasse: aba-info-bild
+    pflicht: true
+    inhalt: "Frage 'Wie sieht das Set aus?' - Handarbeit, Farbnuancen (z.B. Schwarz-Gold, OM-Gravur)"
+  - id: kloeppel
+    html_klasse: aba-info-kloeppel
+    pflicht: true
+    inhalt: "Frage 'Welchen Kloeppel bekomme ich dazu?'"
+  - id: einzelstueck
+    html_klasse: aba-info-einzelstueck
+    pflicht: true
+    inhalt: "Frage 'Wie oft ist dieses Set erhaeltlich?' - Unikat, einmal verfuegbar"
+  - id: herstellung
+    html_klasse: aba-info-intro
+    pflicht: true
+    inhalt: "Frage 'Wer hat die Schalen hergestellt?' - kleine Manufakturen, Handarbeit, Unikate; kurze Hauptsaetze, ohne Kitsch"
+  - id: zusammensetzung
+    pflicht: true
+    inhalt: "Oe + Gewicht pro Schale, 1-2 Alltagscharakteristika; Gesamtgewicht; KEINE Nachklang-Sekunden"
+
+reihenfolge:
+  # Hamburger-Schule Struktur-Reihenfolge (H2 -> H3)
+  - wirkungsessenz
+  - kurzbeschreibung
+  - einsatz_koerper
+  - schalen_block
+  - klangbeispiel
+  - optik
+  - kloeppel
+  - einzelstueck
+  - herstellung
+  - zusammensetzung
