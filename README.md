@@ -27,3 +27,5 @@ By leveraging this knowledge base, we can ensure that all team members have acce
 
 - **Sicherheit / SSH** — [SSH-Schlüssel: Ist-Zustand, Rotation & der bessere Weg](security/ssh/2026-05-31-ssh-schluessel-sota.md)
   ([HTML-Version](security/ssh/2026-05-31-ssh-schluessel-sota.html)) · verständlich für Frank, Michael & Christina
+- **Video-Analysen** — [Custom CRM mit Claude Code (Income Stream Surfers)](video-analysen/2026-06-28-custom-crm-claude-code.md)
+  ([HTML-Version](video-analysen/2026-06-28-custom-crm-claude-code.html)) · Lead-Maschine, Stack, 6 Conversion-Hebel & Übertragung auf Gstack-CRM / Sound-Spirit / biokleidung

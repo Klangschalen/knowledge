@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lern-Extrakt: Custom CRM mit Claude Code</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d212b; --ink:#e8eaee; --mut:#9aa3b2;
+    --acc:#34d399; --acc2:#60a5fa; --warn:#f59e0b; --bad:#f87171; --line:#262b36;
+    --good:#22c55e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+  header.h{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px}
+  .kick{color:var(--acc);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+  h1{font-size:30px;line-height:1.25;margin:6px 0 10px}
+  h2{font-size:22px;margin:38px 0 12px;padding-top:10px;border-top:1px solid var(--line)}
+  h3{font-size:17px;margin:22px 0 8px;color:#fff}
+  p{margin:10px 0}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .pill{background:var(--card2);border:1px solid var(--line);border-radius:999px;
+    padding:5px 12px;font-size:13px;color:var(--mut)}
+  .pill b{color:var(--ink)}
+  .lead{background:linear-gradient(180deg,#1a1f2b,#141821);border:1px solid var(--line);
+    border-radius:14px;padding:18px 20px;margin:18px 0;font-size:17px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:#fff;background:var(--card2);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+  tr:hover td{background:#13161d}
+  code{background:#11141a;border:1px solid var(--line);border-radius:6px;padding:1px 6px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;color:#cfe3ff}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .card h3{margin-top:0}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+    border-radius:8px;background:var(--acc);color:#06281c;font-weight:800;font-size:14px;margin-right:8px}
+  ul{margin:8px 0 8px 2px;padding-left:20px}
+  li{margin:5px 0}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+  .step{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14px}
+  .arrow{color:var(--acc);font-weight:800}
+  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:6px;margin-right:6px}
+  .t-good{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+  .t-warn{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)}
+  .t-bad{background:rgba(248,113,113,.15);color:#fca5a5;border:1px solid rgba(248,113,113,.3)}
+  blockquote{margin:12px 0;padding:10px 16px;border-left:3px solid var(--acc2);
+    background:#12161e;color:var(--mut);font-style:italic}
+  .src{color:var(--mut);font-size:13px}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+  .kbd{font-family:ui-monospace,monospace;background:#0c0f14;border:1px solid var(--line);
+    border-radius:6px;padding:10px 12px;display:block;white-space:pre-wrap;color:#cfe3ff;font-size:13px;margin:8px 0}
+  .two{columns:2;column-gap:22px}
+  @media(max-width:720px){.two{columns:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="h">
+  <div class="kick">Lern-Extrakt &middot; Video-Analyse</div>
+  <h1>Custom CRM mit Claude Code bauen &mdash; die Lead-Maschine hinter "10.000/Monat"</h1>
+  <p class="src">Quelle: YouTube-Video "I Let Claude Code Build a Business &mdash; It Made &euro;24,249 From Scratch",
+  Kanal <b>Income Stream Surfers</b>, Laufzeit 20:03, veroeffentlicht 28.06.2026.
+  Extrahiert aus dem Volltranskript (3.764 Woerter, 564 Caption-Events) und 125 visuell
+  analysierten Storyboard-Frames.</p>
+  <div class="meta">
+    <span class="pill">Typ: <b>Strategie-/Architektur-Walkthrough</b> (kein Live-Build)</span>
+    <span class="pill">Domain: <b>Lead-Gen + CRM</b></span>
+    <span class="pill">Werkzeug: <b>Claude Code</b></span>
+    <span class="pill">Relevanz fuer uns: <b>Gstack-CRM, Content-Engine, biokleidung</b></span>
+  </div>
+</header>
+
+<div class="lead">
+<b>Kernaussage in drei Saetzen.</b> Ein Marketing-Website mit Formular/Konfigurator sammelt Leads;
+diese landen in einem selbstgebauten CRM (eine einzige Datenbank als "single source of truth"),
+hinter Login geschuetzt. Claude Code uebernimmt Bau, Betrieb und Lead-Bearbeitung, indem es
+ueber CLI, MCP-Connectors oder Browser-Steuerung direkt mit den Systemen spricht. Der eigentliche
+Gewinn liegt nicht im Bauen, sondern darin, <b>keinen Lead zu verschwenden</b> (Geschwindigkeit,
+Nurture, Spam-Schutz, Conversion-Lecks schliessen).
+</div>
+
+<h2>1. Das Geschaeftsmodell (was hier wirklich verkauft wird)</h2>
+<p>Beispiel-Business im Video: <b>Ballynahown Park</b> (Galway, Irland) &mdash; eine Event-Location
+fuer Junggesellen-/Junggesellinnen-Abschiede ("stag/hen parties"). Claim-Folien: "permission to unwind",
+"a place without the noise". Verkauft werden <b>Erlebnisse pro Person</b>, nicht nur Uebernachtungen
+(z.B. "Murder Mystery" als Upsell +50 EUR/Person). Per-Person-Preise konvertieren besser und erhoehen den
+durchschnittlichen Auftragswert.</p>
+<p>Der Sprecher betont: er <b>verkauft keine Leads</b>, sondern ist ueber eine Umsatzbeteiligung mit
+einem Geschaeftspartner beteiligt. Umsatzangabe im Video: rund <b>10.000/Monat</b> ueber Google Ads +
+Marketing-Website. Der Titel ("24.249 EUR") ist Clickbait-Verstaerkung; im Video selbst belegt wird die
+10.000-Zahl, nicht die Titelzahl (siehe Abschnitt 8).</p>
+
+<div class="flow">
+  <span class="step">Marketing-Site (Astro)</span><span class="arrow">-&gt;</span>
+  <span class="step">Formular / Konfigurator</span><span class="arrow">-&gt;</span>
+  <span class="step">Lead in CRM (Convex)</span><span class="arrow">-&gt;</span>
+  <span class="step">Nurture (Resend)</span><span class="arrow">-&gt;</span>
+  <span class="step">Quote &amp; Sale</span>
+</div>
+
+<h2>2. Der Tech-Stack (mit Rolle und EU-/eigener Einordnung)</h2>
+<table>
+  <tr><th>Baustein</th><th>Rolle im System</th><th>Einordnung fuer uns</th></tr>
+  <tr><td><b>Claude Code</b></td><td>Baut, betreibt, bearbeitet Leads. Zentrales "Gehirn".</td><td>Haben wir. Kern.</td></tr>
+  <tr><td><b>GitHub</b> (CLI)</td><td>Versionierung, Deploy-Quelle.</td><td>Vorhanden.</td></tr>
+  <tr><td><b>Astro</b></td><td>Frontend der Marketing-Website (schnell, SEO-stark).</td><td>Gut fuer statische Money-Pages; passt zu biokleidung-Buildflow.</td></tr>
+  <tr><td><b>Clerk</b></td><td>Authentifizierung + Admin-Rollen (CRM hinter Login).</td><td>Alternative: eigenes Laravel-Auth (Gstack-Stack ist Laravel-geplant).</td></tr>
+  <tr><td><b>Convex</b></td><td>Datenbank + Backend-as-a-Service inkl. Cron-Jobs.</td><td>Bei uns eher <b>Supabase/Postgres</b> (bereits im Einsatz) statt Convex.</td></tr>
+  <tr><td><b>Stripe</b></td><td>Zahlungen. Per MCP-Connector angebunden.</td><td>Best-in-class; DSGVO-tauglich mit AVV.</td></tr>
+  <tr><td><b>Resend</b></td><td>Transaktions- und Nurture-Mails.</td><td>EU-Versand pruefen; Alternative: bestehendes Mailsystem / Gmail-API.</td></tr>
+  <tr><td><b>Vercel</b></td><td>Hosting/Deploy der Website (1-2 Min Build).</td><td>Bei uns Profihost/Hetzner; Vercel optional.</td></tr>
+  <tr><td><b>PostHog</b></td><td>Produkt-Analytics, Conversion-Tracking, Session-Replays.</td><td>Sehr stark, EU-Hosting verfuegbar. Klare Empfehlung statt nur GA.</td></tr>
+  <tr><td><b>Cloudflare Turnstile</b></td><td>Bot-/Spam-Schutz auf Formularen.</td><td>Cloudflare haben wir (Sound-Spirit Pro-Plan). Sofort nutzbar.</td></tr>
+  <tr><td><b>Google Ads</b> (Search)</td><td>Bezahlter Traffic auf die Formulare.</td><td>Inga steuert Ads (Sound-Spirit). Direkt anschlussfaehig.</td></tr>
+</table>
+
+<h2>3. Die drei Wege, wie Claude Code "Dinge tut"</h2>
+<p>Zentrale Lehre der Folie "Pick how Claude Code does each step": Man soll <b>nie selbst in Dashboards
+herumklicken</b>. Drei Mechaniken:</p>
+<div class="grid">
+  <div class="card"><h3><span class="num">1</span>CLI / Terminal</h3>
+    <p><span class="tag t-good">bevorzugt</span>Claude liest die Doku eines CLI (z.B. Vercel-CLI) und
+    fuehrt Befehle nativ aus. Beispiel-Prompt sinngemaess: <i>"Du bist auf Vercel eingeloggt. Launch diese Website."</i>
+    Website-Launch = "vier, fuenf Woerter Prompt".</p></div>
+  <div class="card"><h3><span class="num">2</span>Connectors / MCP</h3>
+    <p><span class="tag t-warn">fuer Spezialfaelle</span>Wenn die CLI etwas nicht kann. Beispiel: <b>Stripe</b>
+    per MCP-Connector. Auch Anbindung an eigene Convex-DB, sodass Claude direkt Feedback/Leads aus dem
+    System zieht.</p></div>
+  <div class="card"><h3><span class="num">3</span>Claude steuert Chrome</h3>
+    <p><span class="tag t-warn">wenn keine API</span>Claude bedient den Browser wie ein Mensch. Beispiel im Video:
+    Google Analytics einrichten lassen, weil der Sprecher das Setup hasst. Auch fuer Airbnb/Stripe-Dashboards.</p></div>
+  <div class="card"><h3>Live-Beispiel "Claude hat Zugriff"</h3>
+    <p>Im eigenen Tool <b>Harbor</b> zeigt er: <i>"Finde das neueste Feedback im Harbor-Feedback-System.
+    Drucke keine privaten Daten wie Namen/Mails. Gib mir das Feedback mit Nummern."</i> Claude zieht es
+    aus der angebundenen DB. Uebertragen auf CRM: <i>"Antworte dieser Person via Resend mit einem Angebot
+    fuer den ausgefuellten Service."</i></p></div>
+</div>
+
+<h2>4. Lead-Lebenszyklus (Status-Modell im CRM)</h2>
+<div class="flow">
+  <span class="step">New</span><span class="arrow">-&gt;</span>
+  <span class="step">Contacted</span><span class="arrow">-&gt;</span>
+  <span class="step">Quoted</span><span class="arrow">-&gt;</span>
+  <span class="step">Bought</span><span class="arrow">-&gt;</span>
+  <span class="step">Won / Lost</span>
+</div>
+<p>Jeder Lead traegt einen klaren Status ("denominator"). Kernwarnung: <b>Leads verschwinden schnell</b> &mdash;
+typisch zwischen 48 Stunden und 7 Tagen. Wer fuer Ads zahlt und Leads liegen laesst, verbrennt Geld.</p>
+
+<h2>5. "NOT WASTING LEADS IS THE WHOLE POINT" &mdash; die sechs Hebel</h2>
+<table>
+  <tr><th>Hebel</th><th>Was konkret</th><th>Umsetzung</th></tr>
+  <tr><td><b>1. Speed to Lead</b></td><td>Sofort benachrichtigt werden, wenn ein Formular eingeht; sofort Angebot raus.</td><td>Mail-Trigger + (automatisches oder Claude-gestuetztes) Quote.</td></tr>
+  <tr><td><b>2. Automated Nurture</b></td><td>Erinnerungs-Mails nach 7 / 14 / 31 Tagen ("Plaetze fuellen sich"). Nach 31 Tagen meist verloren.</td><td>Convex Cron-Jobs (bei uns: Supabase/Laravel-Scheduler) + Resend.</td></tr>
+  <tr><td><b>3. Bot-/Spam-Schutz</b></td><td>Google Ads bringt viele Spam-Formulare.</td><td>Cloudflare Turnstile, "in 10 Minuten" eingerichtet.</td></tr>
+  <tr><td><b>4. Attack the Leaks</b></td><td>Warum konvertieren Nutzer nicht (v.a. mobil)?</td><td>PostHog Session-Replays; Claude wertet sie aus. Reales Beispiel: "Weiter"-Button mobil unauffindbar -&gt; massiver Inquiry-Einbruch, erst per Replay entdeckt.</td></tr>
+  <tr><td><b>5. Offline-Conversions an Google</b></td><td>Echte Kaeufe (nicht nur Formular) als Offline-Conversion zuruekspielen.</td><td>Google optimiert auf zahlende Kunden statt auf reine Formular-Ausfueller.</td></tr>
+  <tr><td><b>6. Rollen &amp; Reporting</b></td><td>Provision pro Verkauf; Verkaeufer sehen nur eigene Leads.</td><td>Clerk-Rollen; ein Dashboard: Leads nach Quelle, Conversion-Rate, Umsatz. Nur bei mehreren Personen relevant.</td></tr>
+</table>
+<blockquote>"Rule of thumb: Du kannst es nicht allein. Entweder du stellst Personal ein, oder Claude Code macht
+es mit dir 'in the loop'." Der Mensch im Loop bleibt Pflicht, weil viele Kunden erst buchen, wenn jede
+Frage beantwortet ist.</blockquote>
+
+<h2>6. Folien-/Story-Struktur (rekonstruiert aus 125 Frames) &mdash; als Bauplan</h2>
+<p>So ist das Video dramaturgisch aufgebaut. Diese Reihenfolge ist eine fertige Gliederung fuer ein
+<b>eigenes, besseres deutsches Tutorial/Funnel-Video</b>:</p>
+<table>
+  <tr><th>#</th><th>Szene (visuell belegt)</th><th>Zweck</th></tr>
+  <tr><td>1</td><td>Talking-Head Intro (Webcam, Wohnzimmer)</td><td>Versprechen + Glaubwuerdigkeit</td></tr>
+  <tr><td>2</td><td>Titelfolie "Creating a Custom CRM From Scratch"</td><td>Thema rahmen</td></tr>
+  <tr><td>3</td><td>Demo Marketing-Site (Hero "permission to unwind")</td><td>Ergebnis zuerst zeigen</td></tr>
+  <tr><td>4</td><td>Demo Konfigurator/Formular (Preise 34 / 60 / 104 EUR)</td><td>Lead-Capture-Mechanik</td></tr>
+  <tr><td>5</td><td>Werbeblock Harbor SEO (29/49 EUR, "2.197 Seiten, ~800k Impressions, 14.987 Clicks")</td><td>Monetarisierung/Sponsor</td></tr>
+  <tr><td>6</td><td>Diagramm "Pick how Claude Code does each step"</td><td>3 Mechaniken (CLI/MCP/Chrome)</td></tr>
+  <tr><td>7</td><td>Diagramm "The stack" (Logo-Raster)</td><td>Werkzeuge benennen</td></tr>
+  <tr><td>8</td><td>Diagramm "The build flow &mdash; the marketing site IS the base"</td><td>Architektur</td></tr>
+  <tr><td>9</td><td>PostHog-Dashboards (121, 7.962, Pie/Bar-Charts, Session-Replays)</td><td>Beweis durch Daten</td></tr>
+  <tr><td>10</td><td>Folie "NOT WASTING LEADS IS THE WHOLE POINT" (Get -&gt; Nurture -&gt; Sell)</td><td>Kernbotschaft</td></tr>
+  <tr><td>11</td><td>"Conversion grid" (Speed/Nurture/Spam/Leaks/Offline/Rollen)</td><td>Taktik-Checkliste</td></tr>
+  <tr><td>12</td><td>"Rule of thumb" + Outro</td><td>Realismus + Cliffhanger (Build im naechsten Video)</td></tr>
+</table>
+
+<h2>7. Substanz vs. Clickbait (kritische Einordnung)</h2>
+<div class="grid">
+  <div class="card"><h3>Belegt / nuetzlich <span class="tag t-good">Signal</span></h3>
+    <ul>
+      <li>Klare, kopierbare Architektur (Site -&gt; Lead -&gt; CRM -&gt; Nurture -&gt; Sale).</li>
+      <li>Konkrete Werkzeugliste mit Begruendung.</li>
+      <li>Echtes Failure-Beispiel (mobiler Button) als Conversion-Lehre.</li>
+      <li>On-Screen-Daten decken sich mit Transkript: ~2.200 Seiten, ~800k Impressions, ~15k Clicks.</li>
+    </ul>
+  </div>
+  <div class="card"><h3>Vorsicht <span class="tag t-bad">Rauschen</span></h3>
+    <ul>
+      <li>Titel "24.249 EUR" wird im Video <b>nicht</b> hergeleitet; belegt ist "10.000/Monat".</li>
+      <li><b>Kein Live-Build</b> &mdash; reiner Strategie-Talk; Bau auf Folge-Video verschoben.</li>
+      <li>Starker Sponsor-Push (Harbor, eigenes Tool) mitten im Inhalt.</li>
+      <li>"Du musst nie selbst etwas tun" ist ueberzogen; Mensch-im-Loop bleibt Pflicht (sagt er selbst).</li>
+      <li>US-zentrierte Stack-Wahl (Convex/Vercel/Clerk) ohne DSGVO-Betrachtung.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>8. Uebertragung auf unsere Projekte</h2>
+<div class="grid">
+  <div class="card"><h3>Gstack-CRM (Loesungsseiten fuer Gambio)</h3>
+    <p>Das Status-Modell (New/Contacted/Quoted/Bought/Won-Lost) und die 6 Conversion-Hebel sind
+    1:1 als Spezifikation nutzbar. Stack-Anpassung: <b>Laravel + Supabase</b> statt Convex/Clerk,
+    Cloudflare Turnstile direkt, PostHog statt nur GA.</p></div>
+  <div class="card"><h3>Sound-Spirit (Klangschalen)</h3>
+    <p>Konfigurator-Idee = "Set-Builder" fuer Planetenschalen-Sets. Per-Person-Logik -&gt; Set-Konfiguration
+    mit Upsell. <b>Wichtig: HWG.</b> Keine Wirkungs-/Heilversprechen in Nurture-Mails; nur Fakten
+    (Frequenz, Material, Herkunft) + "unterstuetzt Wohlbefinden".</p></div>
+  <div class="card"><h3>biokleidung (Affiliate)</h3>
+    <p>Astro-Money-Pages + Newsletter-Nurture statt Verkauf. "Attack the leaks" via Session-Replays auf
+    Affiliate-Klickstrecken. Pflicht: "Anzeige"-Kennzeichnung, Cookie-Consent vor Tracking (PostHog erst
+    nach Einwilligung laden).</p></div>
+  <div class="card"><h3>Content-Engine</h3>
+    <p>Der Funnel-Aufbau ist eine wiederverwendbare Content-Vorlage: "Ergebnis zeigen -&gt; Mechanik
+    erklaeren -&gt; mit Daten beweisen -&gt; Taktik-Checkliste -&gt; Cliffhanger". Direkt als Skript-Template
+    fuer eigene Lead-Gen-Inhalte verwendbar.</p></div>
+</div>
+
+<h2>9. Wiederverwendbare Bausteine (sofort nutzbar)</h2>
+
+<h3>9.1 Prompt-Muster aus dem Video</h3>
+<span class="kbd">Du bist auf [CLI-DIENST] eingeloggt. Launch diese Website.</span>
+<span class="kbd">Finde das neueste [Feedback/Lead] im [System]. Drucke keine privaten Daten
+(Namen, E-Mails). Gib mir die Eintraege nummeriert.</span>
+<span class="kbd">Wir haben gerade diesen Lead erhalten: [Daten]. Erstelle ein Angebot auf Basis
+des Konfigurators (z.B. 3 Naechte Safari-Zelt x 200 EUR = 600 EUR) und sende es via Resend.</span>
+
+<h3>9.2 Content-Outline fuer ein BESSERES deutsches Tutorial</h3>
+<ol>
+  <li><b>Ehrlicher Titel statt Clickbait</b> ("So baust du in einem Wochenende ein eigenes CRM mit Claude Code").</li>
+  <li><b>Ergebnis zuerst</b>: 30 Sek Live-Demo eines echten Leads von Formular bis Angebot.</li>
+  <li><b>Architektur-Folie</b> (Site -&gt; Lead -&gt; CRM -&gt; Nurture -&gt; Sale), EU-Stack-Variante.</li>
+  <li><b>Die 3 Claude-Mechaniken</b> mit je einem echten Befehl auf dem Schirm.</li>
+  <li><b>Daten-Beweis</b>: PostHog-Conversion-Funnel, nicht nur Vanity-Metriken.</li>
+  <li><b>DSGVO/HWG-Kapitel</b> (das Original fehlt komplett) &mdash; unser Differenzierungsmerkmal.</li>
+  <li><b>Echtes Failure + Fix</b> (Conversion-Leck) als Vertrauensanker.</li>
+  <li><b>Kopierbare Checkliste</b> der 6 Hebel als Download.</li>
+</ol>
+
+<h3>9.3 Sofort-Massnahmen (was wir uebernehmen)</h3>
+<ul class="two">
+  <li>Cloudflare Turnstile auf alle Lead-Formulare (Spam killt Ad-Budget).</li>
+  <li>PostHog (EU-Hosting) fuer Conversion + Session-Replays einfuehren.</li>
+  <li>Lead-Status-Modell als feste Spec in Gstack-CRM.</li>
+  <li>Nurture-Sequenz 7/14/31 Tage als Cron + Mail-Template.</li>
+  <li>"Speed to Lead": Sofort-Benachrichtigung bei Formular-Eingang.</li>
+  <li>Offline-Conversions an Google Ads (Inga briefen).</li>
+  <li>Konfigurator-Pattern als Set-Builder fuer Sound-Spirit pruefen.</li>
+  <li>Funnel-Story-Template in Content-Engine ablegen.</li>
+</ul>
+
+<div class="foot">
+  <p><b>Methodik &amp; Belegbarkeit.</b> Transkript via yt-dlp (Auto-Captions en-orig, json3) gezogen und
+  vollstaendig gelesen. Visuelle Analyse ueber 125 Storyboard-Frames (160x90, zu Kontaktboegen vergroessert):
+  ausreichend fuer Szenentyp, Folien-Titel, UI-Layout und grobe Diagrammstruktur. <b>Nicht erfasst</b>:
+  pixelgenaue Code-Zeilen in den Claude-Terminal-Szenen &mdash; das Original-Video (full-res) ist ueber das
+  Egress-Proxy (IP-gebundene googlevideo-URLs, Org-Policy) nicht ladbar. Alle Zahlen oben sind zweifach
+  belegt (On-Screen-Frame + Transkript). Die Titelzahl 24.249 EUR ist im Videoinhalt nicht hergeleitet.</p>
+  <p>Erstellt am 30.06.2026 fuer Frank / Sound-Spirit. Wiederverwendung in knowledge-Repo vorgesehen.</p>
+</div>
+
+</div>
+</body>
+</html>
