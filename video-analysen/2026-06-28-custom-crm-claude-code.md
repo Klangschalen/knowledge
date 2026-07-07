@@ -86,3 +86,8 @@ Speed-to-Lead-Benachrichtigung; Offline-Conversions; Set-Builder pruefen; Funnel
 Transkript via yt-dlp (json3 Auto-Captions) komplett gelesen; visuelle Analyse ueber 125 Storyboard-Frames
 (Szenentyp/Folien-Titel/UI-Layout). Full-res-Video ueber Egress-Proxy (IP-gebundene googlevideo-URLs,
 Org-Policy) nicht ladbar; pixelgenaue Terminal-Code-Zeilen daher nicht erfasst. Zahlen zweifach belegt.
+
+**Fair Use / Urheberrecht:** Das vollstaendige Video-Transkript wird hier **bewusst nicht** eingecheckt
+(fremdes, urheberrechtlich geschuetztes Material). Dieses Dokument enthaelt nur eigene Zusammenfassung und
+kurze Auszuege mit Quellenangabe. Das Transkript ist bei Bedarf jederzeit reproduzierbar via
+`yt-dlp --write-auto-subs --sub-langs en-orig` gegen die Quell-URL.
