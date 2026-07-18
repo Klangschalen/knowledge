@@ -9,6 +9,10 @@ und dieses Projekt folgt [Semantic Versioning](https://semver.org/lang/de/).
 
 ### Hinzugefügt
 
+- supabase/SUPABASE-INVENTUR.md: Erste vollstaendige Live-Inventur der Supabase
+  (85 Tabellen, 5 Anwendungs-Bloecke, 4 kritische Luecken, Konsolidierungs-Empfehlung).
+  Beantwortet "wir wissen nicht wie die Supabase aufgebaut ist" mit belegten Zahlen
+  vom 2026-07-18.
 - geo/2026-06-19-ai-overviews-control-sota.md: Cross-Projekt-SOTA zu AI-Overviews-
   Kontrolle (RAG-Passagen, Zitations-Hebel, Bot-Matrix). Verweist auf website-audit
   GEO-001..014 und llms-txt-geo Primaerquelle.
