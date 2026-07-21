@@ -1,0 +1,62 @@
+# Wirkungs-Vokabular + Sprachregeln Klangschalen-Texte
+# Deterministische Grundlage fuer: Wirkungs-Bloecke, Generik-Sucher, Recht-Gate.
+schema_version: 1
+stand: 2026-06-09
+
+koerper_logik:
+  # Bauch-Herz-Kopf als spuerbare, koerperliche Logik
+  - zone: bauch
+    klang: tief
+    typische_woerter: [tief, voll, stabil, tragend, erdend]
+  - zone: herz
+    klang: warm
+    typische_woerter: [warm, harmonisch, weich, verbindend]
+  - zone: kopf
+    klang: klar
+    typische_woerter: [hell, klar, fokussierend, leicht]
+
+generik_lexikon:
+  # Problemwort -> Alltags-Alternative + Grund (Anti-Generik, Schritt Sprach-Check)
+  - wort: strahlend
+    grund: generisch
+    alternative: [hell, klar]
+  - wort: pulsierend
+    grund: fachsprache
+    alternative: ["wirkt belebend", "gibt Impuls"]
+  - wort: wogend
+    grund: fachsprache
+    alternative: ["breitet sich weich aus", "ruhig fliessend"]
+  - wort: vielschichtig
+    grund: abstrakt
+    alternative: ["warm und voll", "harmonisch und voll"]
+  - wort: tragfaehig
+    grund: technisch_generisch
+    alternative: ["bleibt stabil beim Auflegen", "schwer genug fuer Bauch-/Beckenarbeit"]
+  - wort: "Atmosphaere der Ruhe"
+    grund: allgemeinplatz
+    alternative: ["ruhiger Klangraum", "tragender Klangrahmen"]
+  - wort: "Raum fuellen"
+    grund: unpraezise
+    alternative: ["ruhigen Klangimpuls setzen"]
+
+hwg_verboten:
+  # Recht-Gate: keine Heilversprechen. Begriff -> erlaubte Umformung.
+  - begriff: "Spannungen loesen"
+    typ: heilaussage
+    alternative: ["unterstuetzt beim Loslassen", "bringt Entspannung"]
+  - begriff: "Herzoeffnung"
+    typ: esoterisch
+    alternative: ["spricht den Herzbereich an", "bringt Waerme in die Brust"]
+  - begriff: "Transformation"
+    typ: grosses_versprechen
+    alternative: ["Veraenderung im Alltag unterstuetzen"]
+  - begriff: "Aura"
+    typ: esoterisch
+    alternative: ["Raum um den Kopf"]
+
+verbotene_muster:
+  # GEO/Struktur: nie als Einstieg, nie Nachklang in Sekunden
+  - "Diese Seite ..."
+  - "Hier finden Sie ..."
+  - "Ueberblick ueber ..."
+  - "Nachklang in Sekunden"   # Sekunden-Nachklang weglassen; wenn noetig kurz/mittel/lang

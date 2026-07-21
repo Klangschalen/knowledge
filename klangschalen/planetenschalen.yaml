@@ -1,0 +1,51 @@
+# Planetenschalen: Ton + traditionelle thematische Zuordnung je Planet.
+# Frank: "bei Planetenschalen setzt es an dem, was in den Schalen drin ist" -
+# der Planetenton bestimmt mit, welche Wirkung/welches Thema der Titel anspricht.
+#
+# WICHTIG (Evidence-First): die Frequenz-/Ton-Werte sind NICHT verifiziert und
+# wurden bewusst NICHT erfunden. Quelle ist die Kosmische Oktave (Hans Cousto)
+# bzw. Franks bestehende Produktdaten. Vor Nutzung: gepruefte Werte einsetzen.
+# Die thematischen Zuordnungen sind TRADITIONELL (astrologisch/kulturell), keine
+# Heilaussagen (HWG): bewusst als Stimmung/Thema formuliert, nicht als Koerperwirkung.
+schema_version: 0   # 0 = Struktur steht, Daten unvollstaendig/ungeprueft
+stand: 2026-06-09
+status: ENTWURF_WERTE_PRUEFEN
+
+planeten:
+  - id: sonne
+    ton_hz: null        # QUELLE PRUEFEN (Cousto)
+    ton_note: null      # QUELLE PRUEFEN
+    traditionelles_thema: [kraft, vitalitaet, selbst, waerme]
+  - id: mond
+    ton_hz: null
+    ton_note: null
+    traditionelles_thema: [gefuehl, intuition, ruhe]
+  - id: merkur
+    ton_hz: null
+    ton_note: null
+    traditionelles_thema: [kommunikation, denken, beweglichkeit]
+  - id: venus
+    ton_hz: null
+    ton_note: null
+    traditionelles_thema: [harmonie, schoenheit, ausgleich]
+  - id: mars
+    ton_hz: null
+    ton_note: null
+    traditionelles_thema: [energie, tatkraft, durchsetzung]
+  - id: jupiter
+    ton_hz: null
+    ton_note: null
+    traditionelles_thema: [fuelle, wachstum, weite]
+  - id: saturn
+    ton_hz: null
+    ton_note: null
+    traditionelles_thema: [struktur, erdung, klarheit]
+  - id: erdjahr_om
+    ton_hz: null        # bekannt als OM-Ton - QUELLE PRUEFEN, Wert NICHT geraten
+    ton_note: null
+    traditionelles_thema: [zentrierung, ruhe, ganzheit]
+
+offen:
+  - "Frequenz + Notennamen aller Planeten aus Cousto/Produktdaten einsetzen (ton_hz, ton_note)"
+  - "Liste vervollstaendigen (Uranus, Neptun, Pluto, Erdtag, ggf. Mondknoten)"
+  - "HWG-Konformitaet der Themen pruefen (Stimmung/Thema, keine Koerper-Heilaussage)"
