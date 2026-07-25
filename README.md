@@ -1,6 +1,12 @@
 # Knowledge Base
 
+## Schnellstart
+
+- **[Sound-Spirit Systemlandkarte](wiki/SOUND-SPIRIT-SYSTEMLANDKARTE.md)** — Überblick über 37 Repositories, Zielarchitektur, Plattformrollen und 90-Tage-Plan.
+- **[Open-Source-Radar 2026](wiki/OPEN-SOURCE-RADAR-2026.md)** — über 100 Integrationskandidaten, Struktur-Stack, Auswahlmodell und 15 priorisierte Piloten.
+
 ## Purpose
+
 The knowledge base serves as a centralized repository of information, aimed at documenting standards, best practices, and essential knowledge that can be referenced by team members across various projects. Its main goal is to foster consistency, improve efficiency, and provide a reliable source of truth for our processes and methodologies.
 
 ## Structure
@@ -15,8 +21,9 @@ The knowledge base serves as a centralized repository of information, aimed at d
    - **Articles**: In-depth resources covering particular topics.
    - **How-to Guides**: Step-by-step instructions for accomplishing specific tasks.
    - **Templates**: Pre-formatted documents that can be used for consistency across various projects.
-   
+
 ## How to Use the Knowledge Base
+
 - **Search Functionality**: Utilize the search feature to quickly locate information.
 - **Contributing**: Team members are encouraged to add new information or update existing content to keep the knowledge base current and relevant.
 - **Review Process**: Regular reviews will be conducted to ensure the content remains accurate and useful.
