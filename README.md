@@ -2,7 +2,8 @@
 
 ## Schnellstart
 
-- **[Sound-Spirit Systemlandkarte](wiki/SOUND-SPIRIT-SYSTEMLANDKARTE.md)** — Überblick über 37 Repositories, Zielarchitektur, Plattformrollen, Open-Source-Radar und 90-Tage-Plan.
+- **[Sound-Spirit Systemlandkarte](wiki/SOUND-SPIRIT-SYSTEMLANDKARTE.md)** — Überblick über 37 Repositories, Zielarchitektur, Plattformrollen und 90-Tage-Plan.
+- **[Open-Source-Radar 2026](wiki/OPEN-SOURCE-RADAR-2026.md)** — über 100 Integrationskandidaten, Struktur-Stack, Auswahlmodell und 15 priorisierte Piloten.
 
 ## Purpose
 
