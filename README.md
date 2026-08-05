@@ -1,5 +1,13 @@
 # Knowledge Base
 
+> **EINGESTELLT (2026-08-05, Owner-Entscheidung Frank): Dieses Repo wird archiviert.**
+> Die Wissens-Heimat ist ab sofort `Klangschalen/claude-config` unter `knowledge-base/`
+> (dort liegen alle Inhalte dieses Repos: `geo/`, `security/`, `supabase/`,
+> `STATE_OF_THE_ART_ASSESSMENT.md`). Grund: eine einzige Wissens-Heimat statt
+> paralleler Silos (Plan `claude-config/plans/memory-learning-integration.md`, Gap 5).
+> Hier bitte NICHTS Neues mehr ablegen. Frank archiviert das Repo auf GitHub
+> (Settings -> Archive this repository).
+
 ## Purpose
 The knowledge base serves as a centralized repository of information, aimed at documenting standards, best practices, and essential knowledge that can be referenced by team members across various projects. Its main goal is to foster consistency, improve efficiency, and provide a reliable source of truth for our processes and methodologies.
 
