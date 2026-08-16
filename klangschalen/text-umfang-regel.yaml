@@ -1,0 +1,36 @@
+# Text-Umfang-Regel: steuert, wie viel Text ein Set bekommt.
+# Frank: kleines Set = wenig Text, schweres/grosses Set = mehr Hintergrund + Text.
+schema_version: 1
+stand: 2026-06-09
+
+umfang_nach_set_kategorie:
+  kompakt:
+    kurzbeschreibung_zeichen: { von: 140, bis: 180 }
+    schalen_block_je_schale: false   # knapp, ggf. zusammengefasst
+    hintergrund_block: kurz
+  mittel:
+    kurzbeschreibung_zeichen: { von: 180, bis: 220 }
+    schalen_block_je_schale: true
+    hintergrund_block: mittel
+  profi:
+    kurzbeschreibung_zeichen: { von: 200, bis: 260 }
+    schalen_block_je_schale: true
+    hintergrund_block: ausfuehrlich
+  xxl:
+    kurzbeschreibung_zeichen: { von: 220, bis: 300 }
+    schalen_block_je_schale: true
+    hintergrund_block: ausfuehrlich
+
+ueberschriften:
+  # Frageform, produktangepasst; GEO/SEO/AI-Overview-tauglich + Kundenerwartung
+  stil: frageform
+  geo_regel: "Antwort-first - Frage muss in den ersten Saetzen direkt beantwortet werden"
+  pflicht_individuell_min: 2   # min. 2-3 produktindividuelle Fragen (Gewicht, Einsatz, OM-Gravur, ...)
+  set_standard_fragen:
+    - "Fuer wen eignet sich dieses Set?"
+    - "Wie ergaenzen sich die Schalen (unten-Mitte-oben)?"
+    - "Wie klingt dieses Set?"
+    - "Wie sieht das Set aus?"
+    - "Welchen Kloeppel bekomme ich dazu?"
+    - "Wie oft ist dieses Set erhaeltlich?"
+    - "Wer hat die Schalen hergestellt?"

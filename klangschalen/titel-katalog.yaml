@@ -1,0 +1,32 @@
+# Titel-Katalog: 3 Bauarten fuer Set-Titel.
+# Pipeline-Schritt: 5 Titel-Kandidaten erzeugen -> gegen Wirkungen pruefen -> auswaehlen.
+# PFLICHT in jedem Titel: Durchmesser min-max (Oe) + Gesamtgewicht.
+schema_version: 1
+stand: 2026-06-09
+
+pflicht_im_titel:
+  - durchmesser_min_max_cm
+  - gesamtgewicht_kg
+
+bauarten:
+  - id: aktiv_fuehlbar
+    eignung: [massage, klare_wirkung]
+    muster: "{tief_unten} - {warm_mitte} - {klar_oben} - Set aus {anzahl} Klangschalen Oe {oe_min}-{oe_max} cm, {gewicht_kg} kg"
+    beispiel: "Tiefer Halt - Warme Mitte - Klare Weite - Oe 17-22 cm, 2,50 kg"
+  - id: bildhaft_poetisch
+    eignung: [meditativ, leicht]
+    muster: "{metapher} - {eigenschaft1}, {eigenschaft2}, {eigenschaft3} - Oe {oe_min}-{oe_max} cm, {gewicht_kg} kg"
+    beispiel: "Sanfte Kraft im Fluss - klaerend, bewegend, zentrierend - Oe 13-15 cm, 1,29 kg"
+  - id: funktional_anwendung
+    eignung: [profi, gruppen]
+    muster: "Klangmassage-Set {eigenschaft1} & {eigenschaft2} - {wirkung1}, {wirkung2}, {wirkung3} - Oe {oe_min}-{oe_max} cm, {gewicht_kg} kg"
+    beispiel: "Profi-Klangmassage-Set - tief entspannend, beruhigend, balancierend - Oe 22-25 cm, 4,01 kg"
+
+auswahl_regel:
+  anzahl_kandidaten: 5
+  pruefung:
+    - "Titel spricht die belegten Wirkungen des Sets an (Abgleich wirkungs-vokabular + planetenschalen)"
+    - "keine Generik (Abgleich generik_lexikon)"
+    - "keine HWG-Begriffe (Abgleich hwg_verboten)"
+    - "Oe min-max und Gesamtgewicht enthalten"
+  auswahl: "1 bis n passende Titel, die zur Set-Groesse und den Wirkungen passen"
